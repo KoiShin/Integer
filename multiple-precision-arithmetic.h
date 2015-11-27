@@ -175,15 +175,15 @@ int get_sign(Number *num) {
     return (num->sign == 1) ? 1 : -1;
 }
 
-int compare_number(Number *num, Number *b) {
+int compare_number(Number *num, Number *num2) {
     int i;
     int sign = get_sign(num);
-    if (get_sign(num) > get_sign(b)) return  1;
-    if (get_sign(num) < get_sign(b)) return -1;
+    if (get_sign(num) > get_sign(num2)) return  1;
+    if (get_sign(num) < get_sign(num2)) return -1;
 
     for (i = DIGIT_NUMBER - 1; i >= 0; i--) {
-        if (num->n[i] > b->n[i]) return  1 * sign;
-        if (num->n[i] < b->n[i]) return -1 * sign;
+        if (num->n[i] > num2->n[i]) return  1 * sign;
+        if (num->n[i] < num2->n[i]) return -1 * sign;
     }
     return 0;
 }
