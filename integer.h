@@ -6,7 +6,7 @@
 #include <time.h>
 #include <math.h>
 
-#define DIGIT_NUMBER    20
+#define DIGIT_NUMBER    10
 
 typedef struct NUMBER {
     int n[DIGIT_NUMBER];
@@ -23,11 +23,13 @@ int  is_zero(Number*);
 int  multiply_by_ten(Number*, Number*);
 int  divided_by_ten(Number*, Number*);
 void swap_number(Number*, Number*);
-int  set_int(Number*, int);
+int  set_int(Number*, long);
 int  get_int(Number*, int*);
 void set_sign(Number*, int);
 int  get_sign(Number*);
 int  compare_number(Number*, Number*);
+int  add(Number*, Number*, Number*);
+int  sub(Number *num, Number *num2, Number *result);
 
 void clear_by_zero(Number *num) {
     int i;
@@ -133,7 +135,7 @@ void swap_number(Number *num, Number *num2) {
     *num2 = tmp;
 }
 
-int set_int(Number *num, int x) {
+int set_int(Number *num, long x) {
     int i;
 
     clear_by_zero(num);
@@ -185,6 +187,52 @@ int compare_number(Number *num, Number *num2) {
         if (num->n[i] > num2->n[i]) return  1 * sign;
         if (num->n[i] < num2->n[i]) return -1 * sign;
     }
+    return 0;
+}
+
+int add(Number *num, Number *num2, Number *result) {
+    int carry = 0;
+    int tmp;
+    int i;
+    for (i = 0; i < DIGIT_NUMBER; i++) {
+        tmp = num->n[i] + num2->n[i] + carry;
+        result->n[i] = tmp % 10;
+        carry = tmp / 10;
+    }
+    if (carry != 0) {
+        puts("overflow!!");
+        return -1;
+    }
+
+    return 0;
+}
+
+int sub(Number *num, Number *num2, Number *result) {
+    int borrow = 0;
+    int num_n_i;
+    int i;
+    if (compare_number(num, num2)) {
+        swap_number(num, num2);
+        set_sign(result, -1);
+    }
+
+    for (i = 0; i < DIGIT_NUMBER; i++) {
+        num_n_i = num->n[i] - borrow;
+        if (num_n_i >= num2->n[i]) {
+            result->n[i] = num_n_i - num2->n[i];
+            borrow = 0;
+        } else {
+            result->n[i] = num_n_i - num2->n[i] + 10;
+            borrow = 1;
+        }
+    }
+    swap_number(num2, num);
+
+    if (borrow != 0) {
+        puts("underflow!!");
+        return -1;
+    }
+
     return 0;
 }
 
