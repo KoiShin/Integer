@@ -211,7 +211,7 @@ int subtract(Number *num, Number *num2, Number *result) {
     int borrow = 0;
     int minuend;
     int i;
-    if (compare_number(num, num2)) {
+    if (compare_number(num, num2) == -1) {
         swap_number(num, num2);
         set_sign(result, -1);
     }
