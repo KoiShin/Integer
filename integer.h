@@ -29,7 +29,7 @@ void set_sign(Number*, int);
 int  get_sign(Number*);
 int  compare_number(Number*, Number*);
 int  add(Number*, Number*, Number*);
-int  sub(Number *num, Number *num2, Number *result);
+int  subtract(Number *num, Number *num2, Number *result);
 
 void clear_by_zero(Number *num) {
     int i;
@@ -207,9 +207,9 @@ int add(Number *num, Number *num2, Number *result) {
     return 0;
 }
 
-int sub(Number *num, Number *num2, Number *result) {
+int subtract(Number *num, Number *num2, Number *result) {
     int borrow = 0;
-    int num_n_i;
+    int minuend;
     int i;
     if (compare_number(num, num2)) {
         swap_number(num, num2);
@@ -217,12 +217,12 @@ int sub(Number *num, Number *num2, Number *result) {
     }
 
     for (i = 0; i < DIGIT_NUMBER; i++) {
-        num_n_i = num->n[i] - borrow;
-        if (num_n_i >= num2->n[i]) {
-            result->n[i] = num_n_i - num2->n[i];
+        minuend = num->n[i] - borrow;
+        if (minuend >= num2->n[i]) {
+            result->n[i] = minuend - num2->n[i];
             borrow = 0;
         } else {
-            result->n[i] = num_n_i - num2->n[i] + 10;
+            result->n[i] = minuend - num2->n[i] + 10;
             borrow = 1;
         }
     }
