@@ -1,28 +1,37 @@
 #include <stdio.h>
 #include "integer.h"
 
-int main(void) {
-    Number num, num2, num3;
-    int r;
+int check_adder() {
+    int i;
+    Number num, num2, num_result;
+    int loop_count = 100000;
+    int actual, expected;
 
-    set_int(&num, 43210);
-    printf(" num = ");
-    display_number(&num);
-    putchar('\n');
+    srandom(time(NULL));
 
-    set_int(&num2, 98765);
-    printf("num2 = ");
-    display_number(&num2);
-    putchar('\n');
+    for (i = 0; i < loop_count; i++) {
+        int a = random() % 10000000;
+        int b = random() % 10000000;
 
-    clear_by_zero(&num3);
+        set_int(&num,  a);
+        set_int(&num2, b);
 
-    if (!sub(&num, &num2, &num3)) {
-        // sub(&num, &num2, &num3);
-        printf("num3 = ");
-        display_number(&num3);
-        putchar('\n');
+        expected = a + b;
+
+        add(&num, &num2, &num_result);
+        get_int(&num_result, &actual);
+
+        if (actual != expected) {
+            puts("NG!!");
+            return -1;
+        }
     }
 
+    puts("OK.");
+    return 0;
+}
+
+int main(void) {
+    check_adder();
     return 0;
 }
