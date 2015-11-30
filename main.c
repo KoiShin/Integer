@@ -2,25 +2,27 @@
 #include "integer.h"
 
 int main(void) {
-    Number num, num2;
+    Number num, num2, num3;
     int r;
 
-    set_int(&num, -12345);
+    set_int(&num, 43210);
     printf(" num = ");
     display_number(&num);
     putchar('\n');
 
-    copy_number(&num, &num2);
-    set_sign(&num2, 1);
+    set_int(&num2, 98765);
     printf("num2 = ");
     display_number(&num2);
     putchar('\n');
 
-    r = get_sign(&num2);
-    printf("get_sign() = %d\n", r);
+    clear_by_zero(&num3);
 
-    r = compare_number(&num, &num2);
-    printf("compare_number() = %d\n", r);
+    if (!sub(&num, &num2, &num3)) {
+        // sub(&num, &num2, &num3);
+        printf("num3 = ");
+        display_number(&num3);
+        putchar('\n');
+    }
 
     return 0;
 }
