@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "multiple-precision-arithmetic.h"
+#include "integer.h"
 
 int main(void) {
     Number num, num2;
