@@ -35,6 +35,3 @@ check-compare-number
 
 # Debug files
 *.dSYM/
-
-# C files
-main.c
