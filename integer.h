@@ -194,6 +194,9 @@ int add(Number *num, Number *num2, Number *result) {
     int carry = 0;
     int tmp;
     int i;
+
+    clear_by_zero(result);
+
     for (i = 0; i < DIGIT_NUMBER; i++) {
         tmp = num->n[i] + num2->n[i] + carry;
         result->n[i] = tmp % 10;
@@ -211,6 +214,9 @@ int subtract(Number *num, Number *num2, Number *result) {
     int borrow = 0;
     int minuend;
     int i;
+
+    clear_by_zero(result);
+
     if (compare_number(num, num2) == -1) {
         swap_number(num, num2);
         set_sign(result, -1);
