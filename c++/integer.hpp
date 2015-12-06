@@ -46,6 +46,7 @@ private:
     void set_random_number(int digit_number);
     int get_int();
     Integer multiply_by_ten();
+    Integer divided_by_ten();
 };
 
 Integer::Integer() {
@@ -241,22 +242,22 @@ Integer Integer::multiply_by_ten() {
     return 0;
 }
 
-// Integer Integer::divided_by_ten() {
-//     Integer result;
-//     int i;
-//     int surplus;
-//
-//     if (this->num[DIGIT_NUMBER - 1] != 0) {
-//         puts("underflow!!");
-//     }
-//     surplus = (this->sign == 1) ? this->num[0] : this->num[0] * -1;
-//
-//     for (i = DIGIT_NUMBER - 1; i >= 0; i--) {
-//         result.num[i - 1] = this->num[i];
-//     }
-//     result->num[DIGIT_NUMBER - 1] = 0;
-//
-//     return surplus;
-// }
+Integer Integer::divided_by_ten() {
+    Integer result;
+    int i;
+    int surplus;
+
+    if (this->num[DIGIT_NUMBER - 1] != 0) {
+        puts("underflow!!");
+    }
+    surplus = (this->sign == 1) ? this->num[0] : this->num[0] * -1;
+
+    for (i = DIGIT_NUMBER - 1; i >= 0; i--) {
+        result.num[i - 1] = this->num[i];
+    }
+    result->num[DIGIT_NUMBER - 1] = 0;
+
+    return surplus;
+}
 
 #endif
