@@ -32,21 +32,20 @@ public:
     // bool operator !=();
     void display_number();
     void display_number_zero_suppress();
+    void clear_by_zero();
+    int compare_number(Integer integer2);
+    Integer get_abs();
+    void set_random_number(int digit_number);
+    void swap_number(Integer *integer2);
+    bool is_zero();
+    int get_int();
+    Integer multiply_by_ten();
+    Integer divided_by_ten();
 
 private:
     int num[DIGIT_NUMBER];
     int sign;
-    void clear_by_zero();
     void set_sign(int sign);
-    int compare_number(Integer integer2);
-    void swap_number(Integer *integer2);
-    void copy_number(Integer *integer2);
-    Integer get_abs();
-    bool is_zero();
-    void set_random_number(int digit_number);
-    int get_int();
-    Integer multiply_by_ten();
-    Integer divided_by_ten();
 };
 
 Integer::Integer() {
