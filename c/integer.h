@@ -30,6 +30,8 @@ int  get_sign(Number*);
 int  compare_number(Number*, Number*);
 int  add(Number*, Number*, Number*);
 int  subtract(Number *num, Number *num2, Number *result);
+int  increment(Number *num, Number *result);
+int  decrement(Number *num, Number *result);
 
 void clear_by_zero(Number *num) {
     int i;
