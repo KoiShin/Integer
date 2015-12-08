@@ -32,6 +32,7 @@ int  add(Number*, Number*, Number*);
 int  subtract(Number *num, Number *num2, Number *result);
 int  increment(Number *num, Number *result);
 int  decrement(Number *num, Number *result);
+int  simple_multiple(int num, int num2, int *result);
 
 void clear_by_zero(Number *num) {
     int i;
@@ -291,6 +292,20 @@ int decrement(Number *num, Number *result) {
     set_int(&one, 1);
 
     return subtract(num, &one, result);
+}
+
+int simple_multiple(int num, int num2, int *result) {
+    int i;
+    int multiplier   = (num > num2) ? num2 : num;   // かける数
+    int multiplicand = (num > num2) ? num  : num2;  // かけられる数
+
+    *result = 0;
+
+    for (i = 0; i < multiplier; i++) {
+        *result += multiplicand;
+    }
+
+    return 0;
 }
 
 #endif
