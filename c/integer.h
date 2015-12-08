@@ -215,6 +215,7 @@ int add(Number *num, Number *num2, Number *result) {
         get_abs(num2, &abs_num2);
         add(&abs_num, &abs_num2, result);
         set_sign(result, -1);
+        return 0;
     }
 
     for (i = 0; i < DIGIT_NUMBER; i++) {
@@ -236,6 +237,20 @@ int subtract(Number *num, Number *num2, Number *result) {
     int i;
 
     clear_by_zero(result);
+
+    if (get_sign(num2) == -1) {
+        Number abs_num;
+        get_abs(num2, &abs_num);
+        add(num, &abs_num, result);
+        return 0;
+    }
+    if (get_sign(num) == -1 && get_sign(num2) == 1) {
+        Number abs_num;
+        get_abs(num, &abs_num);
+        add(&abs_num, num2, result);
+        set_sign(result, -1);
+        return 0;
+    }
 
     if (compare_number(num, num2) == -1) {
         swap_number(num, num2);
