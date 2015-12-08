@@ -28,10 +28,14 @@
 *.x86_64
 *.hex
 
+test
 main
 check-adder
-check-substracter
+check-subtracter
 check-compare-number
 
 # Debug files
 *.dSYM/
+
+main.c
+test.cpp
