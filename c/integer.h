@@ -197,6 +197,26 @@ int add(Number *num, Number *num2, Number *result) {
 
     clear_by_zero(result);
 
+    if (get_sign(num) == 1 && get_sign(num2) == -1) {
+        Number abs_num;
+        get_abs(num2, &abs_num);
+        subtract(num, &abs_num, result);
+        return 0;
+    }
+    if (get_sign(num) == -1 && get_sign(num2) == 1) {
+        Number abs_num;
+        get_abs(num, &abs_num);
+        subtract(num2, &abs_num, result);
+        return 0;
+    }
+    if (get_sign(num) == -1 && get_sign(num2) == -1) {
+        Number abs_num, abs_num2;
+        get_abs(num, &abs_num);
+        get_abs(num2, &abs_num2);
+        add(&abs_num, &abs_num2, result);
+        set_sign(result, -1);
+    }
+
     for (i = 0; i < DIGIT_NUMBER; i++) {
         tmp = num->n[i] + num2->n[i] + carry;
         result->n[i] = tmp % 10;
