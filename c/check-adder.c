@@ -13,6 +13,8 @@ int main(void) {
         int a = random() % 10000000;
         int b = random() % 10000000;
 
+        a *= (random() % 2 == 0) ? 1: -1;
+        b *= (random() % 2 == 0) ? 1: -1;
         set_int(&num,  a);
         set_int(&num2, b);
 
