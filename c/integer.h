@@ -284,4 +284,11 @@ int increment(Number *num, Number *result) {
     return add(num, &one, result);
 }
 
+int decrement(Number *num, Number *result) {
+    Number one;
+    set_int(&one, 1);
+
+    return subtract(num, &one, result);
+}
+
 #endif
