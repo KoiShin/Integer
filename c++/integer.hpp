@@ -31,6 +31,7 @@ public:
     // bool operator ==();
     // bool operator !=();
     void operator ++();
+    void operator --();
     void display_number();
     void display_number_zero_suppress();
     void clear_by_zero();
@@ -127,6 +128,11 @@ Integer Integer::operator -(Integer integer2) {
 void Integer::operator ++() {
     Integer one(1);
     *this = *this + one;
+}
+
+void Integer::operator --() {
+    Integer one(1);
+    *this = *this - one;
 }
 
 void Integer::set_sign(int sign) {
