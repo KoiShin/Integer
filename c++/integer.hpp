@@ -30,6 +30,7 @@ public:
     // bool operator >=();
     // bool operator ==();
     // bool operator !=();
+    void operator ++();
     void display_number();
     void display_number_zero_suppress();
     void clear_by_zero();
@@ -121,6 +122,11 @@ Integer Integer::operator -(Integer integer2) {
     }
 
     return result;
+}
+// TODO:+=を実装した後にこれを使うように書き換える
+void Integer::operator ++() {
+    Integer one(1);
+    *this = *this + one;
 }
 
 void Integer::set_sign(int sign) {
@@ -254,7 +260,7 @@ Integer Integer::divided_by_ten() {
     for (i = DIGIT_NUMBER - 1; i >= 0; i--) {
         result.num[i - 1] = this->num[i];
     }
-    result->num[DIGIT_NUMBER - 1] = 0;
+    result.num[DIGIT_NUMBER - 1] = 0;
 
     return surplus;
 }
