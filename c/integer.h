@@ -344,4 +344,39 @@ int multiple_positive_num(Number *num, Number *num2, Number *result) {
     return 0;
 }
 
+int multiple(Number *num, Number *num2, Number *result) {
+    Number abs_num, abs_num2;
+    get_abs(num,  &abs_num);
+    get_abs(num2, &abs_num2);
+    int positive_num  = (get_sign(num)  == 1) ? 1 : 0;
+    int positive_num2 = (get_sign(num2) == 1) ? 1 : 0;
+    int r;
+
+    clear_by_zero(result);
+    printf("%d %d\n", positive_num, positive_num2);
+
+    if (positive_num && positive_num2) {
+        r = multiple_positive_num(num, num2, result);
+        puts("a");
+    } else if (positive_num && !positive_num2) {
+        r = multiple_positive_num(num, &abs_num2, result);
+        set_sign(result, -1);
+        puts("b");
+    } else if (!positive_num && positive_num2) {
+        r = multiple_positive_num(&abs_num, num2, result);
+        set_sign(result, -1);
+        puts("c");
+    } else if (!positive_num && !positive_num2) {
+        r = multiple_positive_num(&abs_num, &abs_num2, result);
+        puts("d");
+    } else {
+        return -1;
+    }
+
+    if (r == -1) {
+        puts("underflow");
+    }
+    return r;
+}
+
 #endif
