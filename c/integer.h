@@ -309,11 +309,11 @@ int simple_multiple(int num, int num2, int *result) {
     return 0;
 }
 
-int multiple(Number *num, Number *num2, Number *result) {
+int multiple_positive_num(Number *num, Number *num2, Number *result) {
     int i;
     int num_i, num2_i;
     int carry = 0;
-    int tmp_r;
+    int r;
     Number tmp, tmp2;
     clear_by_zero(result);
     clear_by_zero(&tmp);
@@ -329,13 +329,13 @@ int multiple(Number *num, Number *num2, Number *result) {
         }
 
         for (i = 0; i < num2_i; i++) {
-            tmp_r = multiply_by_ten(&tmp3, &tmp4);
-            if (tmp_r != 0) return -1;
+            r = multiply_by_ten(&tmp3, &tmp4);
+            if (r != 0) return -1;
             copy_number(&tmp4, &tmp3);
         }
 
-        tmp_r = add(&tmp, &tmp3, &tmp2);
-        if (tmp_r != 0) return -1;
+        r = add(&tmp, &tmp3, &tmp2);
+        if (r != 0) return -1;
         copy_number(&tmp2, &tmp);
     }
 
