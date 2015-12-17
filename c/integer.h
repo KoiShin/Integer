@@ -33,6 +33,7 @@ int  subtract(Number *num, Number *num2, Number *result);
 int  increment(Number *num, Number *result);
 int  decrement(Number *num, Number *result);
 int  simple_multiple(int num, int num2, int *result);
+int  multiple(Number *num, Number *num2, Number *result);
 
 void clear_by_zero(Number *num) {
     int i;
@@ -304,6 +305,41 @@ int simple_multiple(int num, int num2, int *result) {
     for (i = 0; i < multiplier; i++) {
         *result += multiplicand;
     }
+
+    return 0;
+}
+
+int multiple(Number *num, Number *num2, Number *result) {
+    int i;
+    int num_i, num2_i;
+    int carry = 0;
+    int tmp_r;
+    Number tmp, tmp2;
+    clear_by_zero(result);
+    clear_by_zero(&tmp);
+
+    for (num2_i = 0; num2_i < DIGIT_NUMBER - 1; num2_i++) {
+        Number tmp3, tmp4;
+        clear_by_zero(&tmp3);
+
+        for (num_i = 0; num_i < DIGIT_NUMBER - 1; num_i++) {
+            int mul = num->n[num_i] * num2->n[num2_i] + carry;
+            tmp3.n[num_i] = mul % 10;
+            carry = mul / 10;
+        }
+
+        for (i = 0; i < num2_i; i++) {
+            tmp_r = multiply_by_ten(&tmp3, &tmp4);
+            if (tmp_r != 0) return -1;
+            copy_number(&tmp4, &tmp3);
+        }
+
+        tmp_r = add(&tmp, &tmp3, &tmp2);
+        if (tmp_r != 0) return -1;
+        copy_number(&tmp2, &tmp);
+    }
+
+    copy_number(&tmp, result);
 
     return 0;
 }
