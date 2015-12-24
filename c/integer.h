@@ -239,6 +239,7 @@ int subtract(Number *num, Number *num2, Number *result) {
     int borrow = 0;
     int minuend;
     int i;
+    int swap_flg = 0;
 
     clear_by_zero(result);
 
@@ -257,6 +258,7 @@ int subtract(Number *num, Number *num2, Number *result) {
     }
 
     if (compare_number(num, num2) == -1) {
+        swap_flg = 1;
         swap_number(num, num2);
         set_sign(result, -1);
     }
@@ -271,7 +273,10 @@ int subtract(Number *num, Number *num2, Number *result) {
             borrow = 1;
         }
     }
-    swap_number(num2, num);
+
+    if (swap_flg) {
+        swap_number(num2, num);
+    }
 
     if (borrow != 0) {
         puts("underflow!!");
@@ -353,22 +358,17 @@ int multiple(Number *num, Number *num2, Number *result) {
     int r;
 
     clear_by_zero(result);
-    printf("%d %d\n", positive_num, positive_num2);
 
     if (positive_num && positive_num2) {
         r = multiple_positive_num(num, num2, result);
-        puts("a");
     } else if (positive_num && !positive_num2) {
         r = multiple_positive_num(num, &abs_num2, result);
         set_sign(result, -1);
-        puts("b");
     } else if (!positive_num && positive_num2) {
         r = multiple_positive_num(&abs_num, num2, result);
         set_sign(result, -1);
-        puts("c");
     } else if (!positive_num && !positive_num2) {
         r = multiple_positive_num(&abs_num, &abs_num2, result);
-        puts("d");
     } else {
         return -1;
     }
@@ -377,6 +377,27 @@ int multiple(Number *num, Number *num2, Number *result) {
         puts("underflow");
     }
     return r;
+}
+
+//                    被除数              除数              商              剰余
+int divide(Number *dividend, Number *divisor, Number *result, Number *surplus) {
+    Number tmp, dividend_;
+
+    clear_by_zero(result);
+    clear_by_zero(surplus);
+
+    if (is_zero(divisor) == 0) return -1;
+
+    copy_number(dividend, &dividend_);
+
+    while (1) {
+        if (compare_number(&dividend_, divisor) < 0) break;
+        increment(result, &tmp);             copy_number(&tmp, result);
+        subtract(&dividend_, divisor, &tmp); copy_number(&tmp, &dividend_);
+    }
+    copy_number(&dividend_, surplus);
+
+    return 0;
 }
 
 #endif
