@@ -14,26 +14,26 @@ typedef struct NUMBER {
 } Number;
 
 void clear_by_zero(Number*);
-void display_number(Number*);
-void display_number_zero_suppress(Number*);
+void display_number(const Number*);
+void display_number_zero_suppress(const Number*);
 void set_random_number(Number*, int);
-void copy_number(Number*, Number*);
-void get_abs(Number*, Number*);
-int  is_zero(Number*);
-int  multiply_by_ten(Number*, Number*);
-int  divided_by_ten(Number*, Number*);
+void copy_number(const Number*, Number*);
+void get_abs(const Number*, Number*);
+int  is_zero(const Number*);
+int  multiply_by_ten(const Number*, Number*);
+int  divided_by_ten(const Number*, Number*);
 void swap_number(Number*, Number*);
 int  set_int(Number*, long);
-int  get_int(Number*, int*);
+int  get_int(const Number*, int*);
 void set_sign(Number*, int);
-int  get_sign(Number*);
-int  compare_number(Number*, Number*);
-int  add(Number*, Number*, Number*);
-int  subtract(Number *num, Number *num2, Number *result);
-int  increment(Number *num, Number *result);
-int  decrement(Number *num, Number *result);
-int  simple_multiple(int num, int num2, int *result);
-int  multiple(Number *num, Number *num2, Number *result);
+int  get_sign(const Number*);
+int  compare_number(const Number*, const Number*);
+int  add(const Number*, const Number*, Number*);
+int  subtract(const Number*, const Number*, Number*);
+int  increment(const Number*, Number*);
+int  decrement(const Number*, Number*);
+int  simple_multiple(int, int, int*);
+int  multiple(const Number*, const Number*, Number*);
 
 void clear_by_zero(Number *num) {
     int i;
@@ -43,7 +43,7 @@ void clear_by_zero(Number *num) {
     set_sign(num, 1);
 }
 
-void display_number(Number *num) {
+void display_number(const Number *num) {
     int i;
     printf("%s", (get_sign(num) == 1) ? " +" : " -");
     for (i = DIGIT_NUMBER - 1; i >= 0; i--) {
@@ -51,7 +51,7 @@ void display_number(Number *num) {
     }
 }
 
-void display_number_zero_suppress(Number *num) {
+void display_number_zero_suppress(const Number *num) {
     int i;
     printf("%s", (get_sign(num) == 1) ? " +" : " -");
     for (i = DIGIT_NUMBER - 1; i >= 0; i--) {
@@ -78,7 +78,7 @@ void set_random_number(Number *num, int digit_number) {
     set_sign(num, sign);
 }
 
-void copy_number(Number *from_num, Number *to_num) {
+void copy_number(const Number *from_num, Number *to_num) {
     int i;
     for (i = 0; i < DIGIT_NUMBER; i++) {
         to_num->n[i] = from_num->n[i];
@@ -86,12 +86,12 @@ void copy_number(Number *from_num, Number *to_num) {
     set_sign(to_num, get_sign(from_num));
 }
 
-void get_abs(Number *num, Number *abs_num) {
+void get_abs(const Number *num, Number *abs_num) {
     copy_number(num, abs_num);
     set_sign(abs_num, 1);
 }
 
-int is_zero(Number *num) {
+int is_zero(const Number *num) {
     int i;
     for (i = 0; i < DIGIT_NUMBER; i++) {
         if (num->n[i] != 0) return -1;
@@ -99,7 +99,7 @@ int is_zero(Number *num) {
     return 0;
 }
 
-int multiply_by_ten(Number *num, Number *computation) {
+int multiply_by_ten(const Number *num, Number *computation) {
     int i;
 
     if (num->n[DIGIT_NUMBER - 1] != 0) {
@@ -115,7 +115,7 @@ int multiply_by_ten(Number *num, Number *computation) {
     return 0;
 }
 
-int divided_by_ten(Number *num, Number *computation) {
+int divided_by_ten(const Number *num, Number *computation) {
     int i, surplus;
 
     if (num->n[DIGIT_NUMBER - 1] != 0) {
@@ -157,7 +157,7 @@ int set_int(Number *num, long x) {
     return 0;
 }
 
-int get_int(Number *num, int *x) {
+int get_int(const Number *num, int *x) {
     int i;
     *x = 0;
 
@@ -177,11 +177,11 @@ void set_sign(Number *num, int sign) {
     num->sign = (sign == 1) ? 1 : -1;
 }
 
-int get_sign(Number *num) {
+int get_sign(const Number *num) {
     return (num->sign == 1) ? 1 : -1;
 }
 
-int compare_number(Number *num, Number *num2) {
+int compare_number(const Number *num, const Number *num2) {
     int i;
     int sign = get_sign(num);
     if (get_sign(num) > get_sign(num2)) return  1;
@@ -194,7 +194,7 @@ int compare_number(Number *num, Number *num2) {
     return 0;
 }
 
-int add(Number *num, Number *num2, Number *result) {
+int add(const Number *num, const Number *num2, Number *result) {
     int carry = 0;
     int tmp;
     int i;
@@ -235,47 +235,50 @@ int add(Number *num, Number *num2, Number *result) {
     return 0;
 }
 
-int subtract(Number *num, Number *num2, Number *result) {
+int subtract(const Number *num, const Number *num2, Number *result) {
+    Number num_, num2_;
     int borrow = 0;
     int minuend;
     int i;
     int swap_flg = 0;
 
+    copy_number(num, &num_);
+    copy_number(num2, &num2_);
     clear_by_zero(result);
 
-    if (get_sign(num2) == -1) {
+    if (get_sign(&num2_) == -1) {
         Number abs_num;
-        get_abs(num2, &abs_num);
-        add(num, &abs_num, result);
+        get_abs(&num2_, &abs_num);
+        add(&num_, &abs_num, result);
         return 0;
     }
-    if (get_sign(num) == -1 && get_sign(num2) == 1) {
+    if (get_sign(&num_) == -1 && get_sign(&num2_) == 1) {
         Number abs_num;
-        get_abs(num, &abs_num);
-        add(&abs_num, num2, result);
+        get_abs(&num_, &abs_num);
+        add(&abs_num, &num2_, result);
         set_sign(result, -1);
         return 0;
     }
 
-    if (compare_number(num, num2) == -1) {
+    if (compare_number(&num_, &num2_) == -1) {
         swap_flg = 1;
-        swap_number(num, num2);
+        swap_number(&num_, &num2_);
         set_sign(result, -1);
     }
 
     for (i = 0; i < DIGIT_NUMBER; i++) {
-        minuend = num->n[i] - borrow;
-        if (minuend >= num2->n[i]) {
-            result->n[i] = minuend - num2->n[i];
+        minuend = num_.n[i] - borrow;
+        if (minuend >= num2_.n[i]) {
+            result->n[i] = minuend - num2_.n[i];
             borrow = 0;
         } else {
-            result->n[i] = minuend - num2->n[i] + 10;
+            result->n[i] = minuend - num2_.n[i] + 10;
             borrow = 1;
         }
     }
 
     if (swap_flg) {
-        swap_number(num2, num);
+        swap_number(&num2_, &num_);
     }
 
     if (borrow != 0) {
@@ -286,14 +289,14 @@ int subtract(Number *num, Number *num2, Number *result) {
     return 0;
 }
 
-int increment(Number *num, Number *result) {
+int increment(const Number *num, Number *result) {
     Number one;
     set_int(&one, 1);
 
     return add(num, &one, result);
 }
 
-int decrement(Number *num, Number *result) {
+int decrement(const Number *num, Number *result) {
     Number one;
     set_int(&one, 1);
 
@@ -314,7 +317,7 @@ int simple_multiple(int num, int num2, int *result) {
     return 0;
 }
 
-int multiple_positive_num(Number *num, Number *num2, Number *result) {
+int multiple_positive_num(const Number *num, const Number *num2, Number *result) {
     int i;
     int num_i, num2_i;
     int carry = 0;
@@ -349,7 +352,7 @@ int multiple_positive_num(Number *num, Number *num2, Number *result) {
     return 0;
 }
 
-int multiple(Number *num, Number *num2, Number *result) {
+int multiple(const Number *num, const Number *num2, Number *result) {
     Number abs_num, abs_num2;
     get_abs(num,  &abs_num);
     get_abs(num2, &abs_num2);
@@ -379,8 +382,8 @@ int multiple(Number *num, Number *num2, Number *result) {
     return r;
 }
 
-//                    被除数              除数              商              剰余
-int divide(Number *dividend, Number *divisor, Number *result, Number *surplus) {
+//                      被除数                   除数              商              剰余
+int divide(const Number *dividend, const Number *divisor, Number *result, Number *surplus) {
     Number tmp, dividend_;
 
     clear_by_zero(result);
