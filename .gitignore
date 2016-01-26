@@ -33,6 +33,8 @@ main
 check-adder
 check-subtracter
 check-compare-number
+check-multiple
+check-divide
 
 # Debug files
 *.dSYM/
