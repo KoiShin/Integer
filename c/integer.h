@@ -517,6 +517,36 @@ int power(const Number *base, const Number *exponent, Number *result) {
     return 0;
 }
 
+bool is_prime(const Number *num) {
+    Number num_;     /* = */ copy_number(num, &num_);
+    Number division; /* = */ set_int(&division, 3);
+    Number zero;     /* = */ set_int(&zero, 0);
+    Number two;      /* = */ set_int(&two, 2);
+    Number remain;   /* = */ clear_by_zero(&remain);
+    Number max;
+    Number tmp;
+    Number dummy; // unused
+
+    divide(&num_, &two, &max, &dummy);
+
+    if (num_.n[0] % 2 == 0) {
+        return FALSE;
+    }
+
+    while (1) {
+        if (compare_number(&division, &max) >= 0) break;
+
+        divide(&num_, &division, &dummy, &remain);
+        if (compare_number(&remain, &zero) == 0) {
+            return FALSE;
+        }
+
+        add(&division, &two, &tmp); copy_number(&tmp, &division); // division += 2
+    }
+
+    return TRUE;
+}
+
 int sqrt_newton(const Number *num, Number *result,
         unsigned long approximation) {
     int i;
