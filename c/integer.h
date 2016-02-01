@@ -45,7 +45,7 @@ int  divide_positive_num(Number*, Number*, Number*, Number*);
 int  divide(const Number*, const Number*, Number*, Number*);
 int  power(const Number*, const Number*, Number*);
 bool is_prime(const Number*);
-int  calculate_factorial(const Number*, Number*);
+int  factorial(const Number*, Number*);
 int  sqrt_newton(const Number*, Number*, unsigned long);
 int  gcd(const Number*, const Number*, Number*);
 int  lcm(const Number*, const Number*, Number*);
@@ -549,7 +549,7 @@ bool is_prime(const Number *num) {
     return TRUE;
 }
 
-int calculate_factorial(const Number *num, Number *result) {
+int factorial(const Number *num, Number *result) {
     Number num_;    /* = */ copy_number(num, &num_);
     Number result_; /* = */ set_int(&result_, 1);
     Number tmp;
