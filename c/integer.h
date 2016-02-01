@@ -609,12 +609,15 @@ int sqrt_newton(const Number *num, Number *result,
         multiple(&tmp2, &five, &tmp);
         divided_by_ten(&tmp, &approximation_);
 
-        if (compare_number(&approximation_, &before_num) == 0) break; // converge
+        // converge
+        if (compare_number(&approximation_, &before_num) == 0) break;
+
         if (compare_number(&approximation_, &two_before_num) != 0) continue;
 
         // oscillation
         if (compare_number(&before_num, &approximation_) == -1) {
-            copy_number(&before_num, &approximation_); // select more smaller value
+            // select more smaller value
+            copy_number(&before_num, &approximation_);
         }
         break;
     }
