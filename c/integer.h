@@ -44,8 +44,9 @@ int  multiple(const Number*, const Number*, Number*);
 int divide_positive_num(Number*, Number*, Number*, Number*);
 int  divide(const Number*, const Number*, Number*, Number*);
 int  power(const Number*, const Number*, Number*);
-int  sqrt_newton(const Number *num, Number *result, unsigned long approximation);
-int  gcd(const Number *num, const Number *num2, Number *result);
+int  sqrt_newton(const Number*, Number*, unsigned long);
+int  gcd(const Number*, const Number*, Number*);
+int  lcm(const Number*, const Number*, Number*);
 
 void clear_by_zero(Number *num) {
     int i;
@@ -584,6 +585,22 @@ int gcd(const Number *num, const Number *num2, Number *result) {
         copy_number(&surplus, &num2_);
     }
     copy_number(&num2_, result);
+    return 0;
+}
+
+int lcm(const Number *num, const Number *num2, Number *result) {
+    Number num_;     /* = */ copy_number(num, &num_);
+    Number num2_;    /* = */ copy_number(num2, &num2_);
+    Number tmp;      /* = */ clear_by_zero(&tmp);
+    Number tmp2;     /* = */ clear_by_zero(&tmp2);
+    Number dummy;    /* = */ clear_by_zero(&dummy);
+
+    clear_by_zero(result);
+
+    multiple(&num_, &num2_, &tmp);
+    gcd(&num_, &num2_, &tmp2);
+    divide(&tmp, &tmp2, result, &dummy);
+
     return 0;
 }
 
