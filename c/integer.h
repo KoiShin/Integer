@@ -41,9 +41,11 @@ int  decrement(const Number*, Number*);
 int  simple_multiple(int, int, int*);
 int  multiple_positive_num(const Number*, const Number*, Number*);
 int  multiple(const Number*, const Number*, Number*);
-int divide_positive_num(Number*, Number*, Number*, Number*);
+int  divide_positive_num(Number*, Number*, Number*, Number*);
 int  divide(const Number*, const Number*, Number*, Number*);
 int  power(const Number*, const Number*, Number*);
+bool is_prime(const Number*);
+int  calculate_factorial(const Number*, Number*);
 int  sqrt_newton(const Number*, Number*, unsigned long);
 int  gcd(const Number*, const Number*, Number*);
 int  lcm(const Number*, const Number*, Number*);
@@ -545,6 +547,19 @@ bool is_prime(const Number *num) {
     }
 
     return TRUE;
+}
+
+int calculate_factorial(const Number *num, Number *result) {
+    Number num_;    /* = */ copy_number(num, &num_);
+    Number result_; /* = */ set_int(&result_, 1);
+    Number tmp;
+
+    while (!is_zero(&num_)) {
+        multiple(&result_, &num_, &tmp); copy_number(&tmp, &result_);
+        decrement(&num_, &tmp);         copy_number(&tmp, &num_);
+    }
+    copy_number(&result_, result);
+    return 0;
 }
 
 int sqrt_newton(const Number *num, Number *result,
