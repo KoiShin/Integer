@@ -498,22 +498,30 @@ int divide(const Number *dividend, const Number *divisor, Number *result,
 
 
 int power(const Number *base, const Number *exponent, Number *result) {
-    int i = 0;
-    int exponent_;
-    Number result_;
+    Number one; /* = */ set_int(&one, 1);
+    Number tmp; /* = */ clear_by_zero(&tmp);
+    Number i;   /* = */ clear_by_zero(&i);
 
-    get_int(exponent, &exponent_);
+    if (is_zero(base)) {
+        set_int(result, 0);
+        return 0;
+    }
+
+    if (compare_number(base, &one) == 0) {
+        set_int(result, 1);
+        return 0;
+    }
+
+    if (is_zero(exponent)) {
+        set_int(result, 1);
+        return 0;
+    }
+
     set_int(result, 1);
-    clear_by_zero(&result_);
-
-    if (exponent_ <  0) return -2;
-    if (exponent_ == 0) return  0;
-
     while (1) {
-        if (i >= exponent_) break;
-        multiple(result, base, &result_);
-        copy_number(&result_, result);
-        i++;
+        if (compare_number(&i, exponent) >= 0) break;
+        multiple(result, base, &tmp); copy_number(&tmp, result);
+        increment(&i, &tmp);          copy_number(&tmp, &i);
     }
 
     return 0;
@@ -613,7 +621,6 @@ int sqrt_newton(const Number *num, Number *result,
     copy_number(&approximation_, result);
     return 0;
 }
-
 
 int gcd(const Number *num, const Number *num2, Number *result) {
     Number num_;     /* = */ copy_number(num, &num_);
