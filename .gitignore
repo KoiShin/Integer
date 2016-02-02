@@ -35,6 +35,8 @@ check-subtracter
 check-compare-number
 check-multiple
 check-divide
+report/
+report_main
 
 # Debug files
 *.dSYM/
