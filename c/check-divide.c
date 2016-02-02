@@ -22,7 +22,7 @@ int main(void) {
         expected_result = a / b;
         expected_surplus = a % b;
 
-        fast_divide(&num, &num2, &num_result, &num_surplus);
+        divide(&num, &num2, &num_result, &num_surplus);
         get_int(&num_result, &actual_result);
         get_int(&num_surplus, &actual_surplus);
 
