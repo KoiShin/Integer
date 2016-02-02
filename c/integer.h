@@ -270,7 +270,6 @@ int subtract(const Number *num, const Number *num2, Number *result) {
     int borrow = 0;
     int minuend;
     int i;
-    bool is_swapped = FALSE;
 
     clear_by_zero(result);
 
@@ -290,7 +289,6 @@ int subtract(const Number *num, const Number *num2, Number *result) {
     }
 
     if (compare_number(&num_, &num2_) == -1) {
-        is_swapped = TRUE;
         swap_number(&num_, &num2_);
         set_sign(result, -1);
     }
@@ -304,10 +302,6 @@ int subtract(const Number *num, const Number *num2, Number *result) {
             result->n[i] = minuend - num2_.n[i] + 10;
             borrow = 1;
         }
-    }
-
-    if (is_swapped) {
-        swap_number(&num2_, &num_);
     }
 
     if (borrow != 0) {
@@ -426,21 +420,18 @@ int multiple(const Number *multiplicand, const Number *multiplier,
 int divide_positive_num(Number *dividend, Number *divisor, Number *result,
         Number *surplus) {
     Number tmp; /* = */ clear_by_zero(&tmp);
-    int count = 0;
+    int cnt;
     int i;
     clear_by_zero(result);
     clear_by_zero(surplus);
 
     if (is_zero(divisor)) return -1;
 
-    while (compare_number(dividend, divisor) == 1) {
-        multiply_by_ten(divisor, &tmp);
-        if (compare_number(dividend, &tmp) != 1) break;
-        copy_number(&tmp, divisor);
-        count++;
+    for (cnt = 0; compare_number(dividend, divisor) == 1; cnt++) {
+        multiply_by_ten(divisor, &tmp); copy_number(&tmp, divisor);
     }
 
-    for (i = 0; i <= count; i++) {
+    for (i = 0; i <= cnt; i++) {
         multiply_by_ten(result, &tmp); copy_number(&tmp, result);
         while (compare_number(dividend, divisor) > -1) {
             increment(result, &tmp);           copy_number(&tmp, result);
@@ -530,7 +521,6 @@ int power(const Number *base, const Number *exponent, Number *result) {
 bool is_prime(const Number *num) {
     Number num_;     /* = */ copy_number(num, &num_);
     Number division; /* = */ set_int(&division, 3);
-    Number zero;     /* = */ set_int(&zero, 0);
     Number two;      /* = */ set_int(&two, 2);
     Number remain;   /* = */ clear_by_zero(&remain);
     Number max;
@@ -547,9 +537,7 @@ bool is_prime(const Number *num) {
         if (compare_number(&division, &max) >= 0) break;
 
         divide(&num_, &division, &dummy, &remain);
-        if (compare_number(&remain, &zero) == 0) {
-            return FALSE;
-        }
+        if (is_zero(&remain)) return FALSE;
 
         add(&division, &two, &tmp); copy_number(&tmp, &division); // division += 2
     }
