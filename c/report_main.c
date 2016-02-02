@@ -41,7 +41,7 @@ int  sqrt_newton(const Number *num, Number *result,
         unsigned long approximation);
 
 int main(void) {
-    Number num, tmp, result, two, result_;
+    Number num, tmp, result;
     int i;
 
     // set 4,900,000,001
@@ -55,19 +55,16 @@ int main(void) {
 
     printf("sqrt(\n");
     display_number_zero_suppress(&num);
-    puts(" )\n=");
+    puts(" \n)\n=");
 
-    sqrt_newton(&num, &result, 1);
+    sqrt_newton(&num, &result, 70000);
 
     display_number_zero_suppress(&result); putchar('\n');
-
-    set_int(&two, 2);
-    power(&result, &two, &result_);
-    display_number_zero_suppress(&result_); putchar('\n');
 
     return 0;
 }
 
+// n[i] = 0, sign = 1
 void clear_by_zero(Number *num) {
     int i;
     for (i = 0; i < DIGIT_NUMBER; i++) {
@@ -76,6 +73,9 @@ void clear_by_zero(Number *num) {
     set_sign(num, 1);
 }
 
+// check if num is zero
+// if num == 0 : return TRUE
+// if num != 1 : return FALSE
 bool is_zero(const Number *num) {
     int i;
     for (i = 0; i < DIGIT_NUMBER; i++) {
@@ -84,6 +84,10 @@ bool is_zero(const Number *num) {
     return TRUE;
 }
 
+// make comparison between num and num2
+// if num > num2  : return  1
+// if num < num2  : return -1
+// if num == num2 : return  0
 int compare_number(const Number *num, const Number *num2) {
     int i;
     int num_sign = get_sign(num);
@@ -98,6 +102,7 @@ int compare_number(const Number *num, const Number *num2) {
     return 0;
 }
 
+// display num by suppress zero
 void display_number_zero_suppress(const Number *num) {
     int i;
     int count = 0;
@@ -114,6 +119,7 @@ void display_number_zero_suppress(const Number *num) {
     }
 }
 
+// set sign of num
 void set_sign(Number *num, int sign) {
     if (sign != 1 && sign != -1) {
         puts("invalid sign!!");
@@ -122,10 +128,14 @@ void set_sign(Number *num, int sign) {
     num->sign = sign;
 }
 
+// return sign of num
 int get_sign(const Number *num) {
     return num->sign;
 }
 
+// set int value to multiple presicion arithmetic
+// if success  : return  0
+// if overflow : return -1
 int set_int(Number *num, long x) {
     int i;
 
@@ -145,21 +155,28 @@ int set_int(Number *num, long x) {
     return 0;
 }
 
+// |num| -> abs_num
 void get_abs(const Number *num, Number *abs_num) {
     copy_number(num, abs_num);
     set_sign(abs_num, 1);
 }
 
+// from_num -> to_num
 void copy_number(const Number *from_num, Number *to_num) {
     *to_num = *from_num;
 }
 
+// num  -> num2
+// num2 -> num
 void swap_number(Number *num, Number *num2) {
     Number tmp = *num;
     *num       = *num2;
     *num2      = tmp;
 }
 
+// num * 10 -> result
+// if success  : return  0
+// if overflow : return -1
 int multiply_by_ten(const Number *num, Number *result) {
     int i;
 
@@ -180,6 +197,9 @@ int multiply_by_ten(const Number *num, Number *result) {
     return 0;
 }
 
+// num / 10 -> result
+// if success   : return  0
+// if underflow : return -1
 int divided_by_ten(const Number *num, Number *result) {
     int i, surplus;
 
@@ -201,6 +221,9 @@ int divided_by_ten(const Number *num, Number *result) {
     return surplus;
 }
 
+// num + num2 -> result
+// if success  : return 0
+// if overflow : return -1
 int add(const Number *num, const Number *num2, Number *result) {
     int carry = 0;
     int i;
@@ -244,20 +267,27 @@ int add(const Number *num, const Number *num2, Number *result) {
     return 0;
 }
 
+// num++ -> result
+// if success  : return  0
+// if overflow : return -1
 int increment(const Number *num, Number *result) {
-    Number one; /* = */ set_int(&one, 1);
+    Number one;
+    set_int(&one, 1);
 
     return add(num, &one, result);
 }
 
+// num - num2 -> result
+// if success   : return  0
+// if underflow : return -1
 int subtract(const Number *num, const Number *num2, Number *result) {
-    Number num_;  /* = */ copy_number(num, &num_);
-    Number num2_; /* = */ copy_number(num2, &num2_);
+    Number num_, num2_;
     int borrow = 0;
     int minuend;
     int i;
-    bool is_swapped = FALSE;
 
+    copy_number(num, &num_);
+    copy_number(num2, &num2_);
     clear_by_zero(result);
 
     if (get_sign(&num2_) == -1) {
@@ -276,7 +306,6 @@ int subtract(const Number *num, const Number *num2, Number *result) {
     }
 
     if (compare_number(&num_, &num2_) == -1) {
-        is_swapped = TRUE;
         swap_number(&num_, &num2_);
         set_sign(result, -1);
     }
@@ -292,10 +321,6 @@ int subtract(const Number *num, const Number *num2, Number *result) {
         }
     }
 
-    if (is_swapped) {
-        swap_number(&num2_, &num_);
-    }
-
     if (borrow != 0) {
         puts("underflow!!(subtract)");
         return -1;
@@ -304,6 +329,9 @@ int subtract(const Number *num, const Number *num2, Number *result) {
     return 0;
 }
 
+// |multiplicand| * |multiplier| -> result
+// if success  : return  0
+// if overflow : return -1
 int multiple_positive_num(const Number *multiplicand,
         const Number *multiplier, Number *result) {
     int i;
@@ -311,8 +339,10 @@ int multiple_positive_num(const Number *multiplicand,
     int carry = 0;
     int r;
     int top_multiplicand, top_multiplier;
-    Number result_;    /* = */ clear_by_zero(&result_);
-    Number tmp_result; /* = */ clear_by_zero(&tmp_result);
+    Number result_, tmp_result;
+
+    clear_by_zero(&result_);
+    clear_by_zero(&tmp_result);
     clear_by_zero(result);
 
     for (top_multiplicand = DIGIT_NUMBER - 1;
@@ -325,8 +355,9 @@ int multiple_positive_num(const Number *multiplicand,
 
     for (multiplier_i = 0; multiplier_i <= top_multiplier + 1;
             multiplier_i++) {
-        Number tmp;  /* = */ clear_by_zero(&tmp);
-        Number tmp2; /* = */ clear_by_zero(&tmp2);
+        Number tmp, tmp2;
+        clear_by_zero(&tmp);
+        clear_by_zero(&tmp2);
 
         for (multiplicand_i = 0; multiplicand_i <= top_multiplicand + 1;
                 multiplicand_i++) {
@@ -351,14 +382,19 @@ int multiple_positive_num(const Number *multiplicand,
     return 0;
 }
 
+// multiplicand * multiplier -> result
+// if success  : return 0
+// if overflow : return -1
 int multiple(const Number *multiplicand, const Number *multiplier,
         Number *result) {
-    Number abs_multiplicand; /* = */ get_abs(multiplicand,  &abs_multiplicand);
-    Number abs_multiplier;   /* = */ get_abs(multiplier, &abs_multiplier);
+    Number abs_multiplicand;
+    Number abs_multiplier;
+    int r;
     int positive_multiplicand   = (get_sign(multiplicand)  == 1) ? 1 : 0;
     int positive_multiplier     = (get_sign(multiplier)    == 1) ? 1 : 0;
-    int r;
 
+    get_abs(multiplicand,  &abs_multiplicand);
+    get_abs(multiplier, &abs_multiplier);
     clear_by_zero(result);
 
     r = multiple_positive_num(&abs_multiplicand, &abs_multiplier, result);
@@ -381,24 +417,26 @@ int multiple(const Number *multiplicand, const Number *multiplier,
     return r;
 }
 
+// |dividend| / |divisor| -> result
+// |dividend| % |divisor| -> surplus
+// if success     : return  0
+// if zero divide : return -1
 int divide_positive_num(Number *dividend, Number *divisor, Number *result,
         Number *surplus) {
-    Number tmp; /* = */ clear_by_zero(&tmp);
-    int count = 0;
+    Number tmp;
+    int cnt;
     int i;
     clear_by_zero(result);
     clear_by_zero(surplus);
+    clear_by_zero(&tmp);
 
     if (is_zero(divisor)) return -1;
 
-    while (compare_number(dividend, divisor) == 1) {
-        multiply_by_ten(divisor, &tmp);
-        if (compare_number(dividend, &tmp) != 1) break;
-        copy_number(&tmp, divisor);
-        count++;
+    for (cnt = 0; compare_number(dividend, divisor) == 1; cnt++) {
+        multiply_by_ten(divisor, &tmp); copy_number(&tmp, divisor);
     }
 
-    for (i = 0; i <= count; i++) {
+    for (i = 0; i <= cnt; i++) {
         multiply_by_ten(result, &tmp); copy_number(&tmp, result);
         while (compare_number(dividend, divisor) > -1) {
             increment(result, &tmp);           copy_number(&tmp, result);
@@ -411,14 +449,20 @@ int divide_positive_num(Number *dividend, Number *divisor, Number *result,
     return 0;
 }
 
+// dividend / divisor -> result
+// dividend % divisor -> surplus
+// if success     : return  0
+// if zero divide : return -1
 int divide(const Number *dividend, const Number *divisor, Number *result,
         Number *surplus) {
-    Number abs_dividend; /* = */ get_abs(dividend,  &abs_dividend);
-    Number abs_divisor;  /* = */ get_abs(divisor, &abs_divisor);
+    Number abs_dividend;
+    Number abs_divisor;
+    int r;
     int positive_dividend   = (get_sign(dividend)  == 1) ? 1 : 0;
     int positive_divisor    = (get_sign(divisor)   == 1) ? 1 : 0;
-    int r;
 
+    get_abs(dividend,  &abs_dividend);
+    get_abs(divisor, &abs_divisor);
     clear_by_zero(result);
     clear_by_zero(surplus);
 
@@ -454,16 +498,21 @@ int divide(const Number *dividend, const Number *divisor, Number *result,
     return r;
 }
 
+// sqrt(num) -> result
 int sqrt_newton(const Number *num, Number *result,
         unsigned long approximation) {
     int i;
-    Number approximation_; /* = */ clear_by_zero(&approximation_);
-    Number before_num;     /* = */ clear_by_zero(&before_num);
-    Number two_before_num; /* = */ clear_by_zero(&two_before_num);
-    Number dummy;          /* = */ clear_by_zero(&dummy);
-    Number tmp_;           /* = */ clear_by_zero(&tmp_);
-    Number five;           /* = */ set_int(&five, 5);
+    Number approximation_;
+    Number before_num, two_before_num;
+    Number dummy, tmp_;
+    Number five;
 
+    clear_by_zero(&approximation_);
+    clear_by_zero(&before_num);
+    clear_by_zero(&two_before_num);
+    clear_by_zero(&dummy);
+    clear_by_zero(&tmp_);
+    set_int(&five, 5);
     clear_by_zero(result);
 
     // set approximation
@@ -482,8 +531,9 @@ int sqrt_newton(const Number *num, Number *result,
     copy_number(&approximation_, &two_before_num);
 
     while (1) {
-        Number tmp;  /* = */ clear_by_zero(&tmp);
-        Number tmp2; /* = */ clear_by_zero(&tmp2);
+        Number tmp, tmp2;
+        clear_by_zero(&tmp);
+        clear_by_zero(&tmp2);
         copy_number(&before_num, &two_before_num);
         copy_number(&approximation_, &before_num);
 
@@ -493,12 +543,15 @@ int sqrt_newton(const Number *num, Number *result,
         multiple(&tmp2, &five, &tmp);
         divided_by_ten(&tmp, &approximation_);
 
-        if (compare_number(&approximation_, &before_num) == 0) break; // converge
+        // converge
+        if (compare_number(&approximation_, &before_num) == 0) break;
+
         if (compare_number(&approximation_, &two_before_num) != 0) continue;
 
         // oscillation
         if (compare_number(&before_num, &approximation_) == -1) {
-            copy_number(&before_num, &approximation_); // select more smaller value
+            // select more smaller value
+            copy_number(&before_num, &approximation_);
         }
         break;
     }
