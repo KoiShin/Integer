@@ -18,7 +18,7 @@ public:
     // int operator *();
     // int operator /();
     // int operator %();
-    // int operator =();
+    void operator =(long number);
     // int operator +=();
     // int operator -=();
     // int operator *=();
@@ -32,6 +32,8 @@ public:
     // bool operator !=();
     void operator ++();
     void operator --();
+    // int power();
+    // int is_prime();
     void display_number();
     void display_number_zero_suppress();
     void clear_by_zero();
@@ -56,6 +58,10 @@ Integer::Integer() {
 }
 
 Integer::Integer(long number) {
+    *this = number;
+}
+
+void Integer::operator =(long number) {
     int i;
 
     clear_by_zero();
