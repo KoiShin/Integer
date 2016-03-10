@@ -27,7 +27,7 @@ public:
     bool operator >(Integer integer2);
     bool operator <(Integer integer2);
     bool operator >=(Integer integer2);
-    // bool operator <=();
+    bool operator <=(Integer integer2);
     // bool operator ==();
     // bool operator !=();
     void operator ++();
@@ -153,6 +153,11 @@ bool Integer::operator <(Integer integer2) {
 
 bool Integer::operator >=(Integer integer2) {
     if (compare_number(integer2) >= 0) return true;
+    else return false;
+}
+
+bool Integer::operator <=(Integer integer2) {
+    if (compare_number(integer2) <= 0) return true;
     else return false;
 }
 
