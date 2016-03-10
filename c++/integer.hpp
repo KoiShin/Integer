@@ -25,7 +25,7 @@ public:
     // int operator /=();
     // int operator %=();
     // bool operator <();
-    // bool operator >();
+    bool operator >(Integer integer2);
     // bool operator <=();
     // bool operator >=();
     // bool operator ==();
@@ -37,7 +37,6 @@ public:
     void display_number();
     void display_number_zero_suppress();
     void clear_by_zero();
-    int compare_number(Integer integer2);
     Integer get_abs();
     void set_random_number(int digit_number);
     void swap_number(Integer *integer2);
@@ -50,6 +49,7 @@ private:
     int num[DIGIT_NUMBER];
     int sign;
     void set_sign(int sign);
+    int compare_number(Integer integer2);
 };
 
 Integer::Integer() {
@@ -139,6 +139,11 @@ void Integer::operator ++() {
 void Integer::operator --() {
     Integer one(1);
     *this = *this - one;
+}
+
+bool Integer::operator >(Integer integer2) {
+    if (compare_number(integer2) == 1) return true;
+    else return false;
 }
 
 void Integer::set_sign(int sign) {
