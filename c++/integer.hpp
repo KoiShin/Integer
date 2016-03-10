@@ -15,7 +15,7 @@ public:
     Integer(long number);
     Integer operator +(Integer integer2);
     Integer operator -(Integer integer2);
-    // int operator *();
+    // Integer operator *(Integer integer2);
     // int operator /();
     // int operator %();
     void operator =(long number);
@@ -32,6 +32,12 @@ public:
     bool operator !=(Integer integer2);
     void operator ++();
     void operator --();
+    bool operator >(long num2);
+    bool operator <(long num2);
+    bool operator >=(long num2);
+    bool operator <=(long num2);
+    bool operator ==(long num2);
+    bool operator !=(long num2);
     void display_number();
     void display_number_zero_suppress();
     void clear_by_zero();
@@ -60,51 +66,82 @@ Integer::Integer(long number) {
 }
 
 Integer Integer::operator +(Integer integer2) {
-    Integer result;
     int carry = 0;
-    int tmp;
     int i;
+    Integer result;
 
-    result.clear_by_zero();
+    if (*this >= 0 && integer2 < 0) {
+        Integer abs_num = integer2.get_abs();
+        result = *this - abs_num;
+        return result;
+    }
+
+    if (*this < 0 && integer2 >= 0) {
+        Integer abs_num = get_abs();
+        result = integer2 - abs_num;
+        return result;
+    }
+
+    if (*this < 0 && integer2 < 0) {
+        Integer abs_num = get_abs();
+        Integer abs_num2 = integer2.get_abs();
+        result = abs_num + abs_num2;
+        result.set_sign(-1);
+        return result;
+    }
 
     for (i = 0; i < DIGIT_NUMBER; i++) {
-        tmp = this->num[i] + integer2.num[i] + carry;
+        int tmp = num[i] + integer2.num[i] + carry;
         result.num[i] = tmp % 10;
         carry = tmp / 10;
     }
+
     if (carry != 0) {
-        puts("overflow!!");
+        cout << "overflow!!(add)" << endl;
     }
+
     return result;
 }
 
 Integer Integer::operator -(Integer integer2) {
-    Integer result;
+    Integer num_, num2_, result;
     int borrow = 0;
     int minuend;
-    int i;
 
-    result.clear_by_zero();
+    num_ = *this;
+    num2_ = integer2;
 
-    if (this->compare_number(integer2) == -1) {
-        this->swap_number(&integer2);
+    if (num2_ < 0) {
+        Integer abs_num = num2_.get_abs();
+        result = num_ + abs_num;
+        return result;
+    }
+
+    if (num_ < 0 && num2_ >= 0) {
+        Integer abs_num = num_.get_abs();
+        result = abs_num + num2_;
+        result.set_sign(-1);
+        return result;
+    }
+
+    if (num_ < num2_) {
+        num_.swap_number(&num2_);
         result.set_sign(-1);
     }
 
-    for (i = 0; i < DIGIT_NUMBER; i++) {
-        minuend = this->num[i] - borrow;
-        if (minuend >= integer2.num[i]) {
-            result.num[i] = minuend - integer2.num[i];
+    for (int i = 0; i < DIGIT_NUMBER; i++) {
+        minuend = num_.num[i] - borrow;
+        if (minuend >= num2_.num[i]) {
+            result.num[i] = minuend - num2_.num[i];
             borrow = 0;
         } else {
-            result.num[i] = minuend - integer2.num[i] + 10;
+            result.num[i] = minuend - num2_.num[i] + 10;
             borrow = 1;
         }
     }
-    this->swap_number(&integer2);
 
     if (borrow != 0) {
-        puts("underflow!!");
+        cout << "underflow!!(subtract)" << endl;
     }
 
     return result;
@@ -139,15 +176,14 @@ void Integer::operator -=(Integer integer2) {
     *this = result;
 }
 
-// TODO:+=を実装した後にこれを使うように書き換える
 void Integer::operator ++() {
     Integer one(1);
-    *this = *this + one;
+    *this += one;
 }
 
 void Integer::operator --() {
     Integer one(1);
-    *this = *this - one;
+    *this -= one;
 }
 
 bool Integer::operator >(Integer integer2) {
@@ -155,9 +191,19 @@ bool Integer::operator >(Integer integer2) {
     else return false;
 }
 
+bool Integer::operator >(long num2) {
+    Integer integer2(num2);
+    return *this > integer2;
+}
+
 bool Integer::operator <(Integer integer2) {
     if (compare_number(integer2) == -1) return true;
     else return false;
+}
+
+bool Integer::operator <(long num2) {
+    Integer integer2(num2);
+    return *this < integer2;
 }
 
 bool Integer::operator >=(Integer integer2) {
@@ -165,9 +211,19 @@ bool Integer::operator >=(Integer integer2) {
     else return false;
 }
 
+bool Integer::operator >=(long num2) {
+    Integer integer2(num2);
+    return *this >= integer2;
+}
+
 bool Integer::operator <=(Integer integer2) {
     if (compare_number(integer2) <= 0) return true;
     else return false;
+}
+
+bool Integer::operator <=(long num2) {
+    Integer integer2(num2);
+    return *this <= integer2;
 }
 
 bool Integer::operator ==(Integer integer2) {
@@ -175,9 +231,19 @@ bool Integer::operator ==(Integer integer2) {
     else return false;
 }
 
+bool Integer::operator ==(long num2) {
+    Integer integer2(num2);
+    return *this == integer2;
+}
+
 bool Integer::operator !=(Integer integer2) {
     if (compare_number(integer2) != 0) return true;
     else return false;
+}
+
+bool Integer::operator !=(long num2) {
+    Integer integer2(num2);
+    return *this != integer2;
 }
 
 void Integer::set_sign(int sign) {
