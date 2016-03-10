@@ -20,7 +20,7 @@ public:
     // int operator %();
     void operator =(long number);
     void operator +=(Integer integer2);
-    // int operator -=();
+    void operator -=(Integer integer2);
     // int operator *=();
     // int operator /=();
     // int operator %=();
@@ -131,6 +131,11 @@ void Integer::operator =(long number) {
 
 void Integer::operator +=(Integer integer2) {
     Integer result = *this + integer2;
+    *this = result;
+}
+
+void Integer::operator -=(Integer integer2) {
+    Integer result = *this - integer2;
     *this = result;
 }
 
