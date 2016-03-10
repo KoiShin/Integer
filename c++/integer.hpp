@@ -19,7 +19,7 @@ public:
     // int operator /();
     // int operator %();
     void operator =(long number);
-    // int operator +=();
+    void operator +=(Integer integer2);
     // int operator -=();
     // int operator *=();
     // int operator /=();
@@ -32,8 +32,6 @@ public:
     bool operator !=(Integer integer2);
     void operator ++();
     void operator --();
-    // int power();
-    // int is_prime();
     void display_number();
     void display_number_zero_suppress();
     void clear_by_zero();
@@ -59,25 +57,6 @@ Integer::Integer() {
 
 Integer::Integer(long number) {
     *this = number;
-}
-
-void Integer::operator =(long number) {
-    int i;
-
-    clear_by_zero();
-    set_sign(1);
-    if (number < 0) {
-        set_sign(-1);
-        number *= -1;
-    }
-
-    for (i = 0; i < DIGIT_NUMBER; i++) {
-        if (i >= DIGIT_NUMBER) {
-            cout << "Some error occurred" << endl;
-        }
-        num[i] = number % 10;
-        number /= 10;
-    }
 }
 
 Integer Integer::operator +(Integer integer2) {
@@ -130,6 +109,31 @@ Integer Integer::operator -(Integer integer2) {
 
     return result;
 }
+
+void Integer::operator =(long number) {
+    int i;
+
+    clear_by_zero();
+    set_sign(1);
+    if (number < 0) {
+        set_sign(-1);
+        number *= -1;
+    }
+
+    for (i = 0; i < DIGIT_NUMBER; i++) {
+        if (i >= DIGIT_NUMBER) {
+            cout << "Some error occurred" << endl;
+        }
+        num[i] = number % 10;
+        number /= 10;
+    }
+}
+
+void Integer::operator +=(Integer integer2) {
+    Integer result = *this + integer2;
+    *this = result;
+}
+
 // TODO:+=を実装した後にこれを使うように書き換える
 void Integer::operator ++() {
     Integer one(1);
