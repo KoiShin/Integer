@@ -15,15 +15,15 @@ public:
     Integer(long number);
     Integer operator +(Integer integer2);
     Integer operator -(Integer integer2);
-    // Integer operator *(Integer integer2);
-    // int operator /();
-    // int operator %();
+    Integer operator *(Integer integer2);
+    // Integer operator /(Integer integer2);
+    // Integer operator %(Integer integer2);
     void operator =(long number);
     void operator +=(Integer integer2);
     void operator -=(Integer integer2);
-    // int operator *=();
-    // int operator /=();
-    // int operator %=();
+    // void operator *=(Integer integer2);
+    // void operator /=(Integer integer2);
+    // void operator %=(Integer integer2);
     bool operator >(Integer integer2);
     bool operator <(Integer integer2);
     bool operator >=(Integer integer2);
@@ -142,6 +142,41 @@ Integer Integer::operator -(Integer integer2) {
 
     if (borrow != 0) {
         cout << "underflow!!(subtract)" << endl;
+    }
+
+    return result;
+}
+
+Integer Integer::operator *(Integer integer2) {
+    int carry = 0;
+    int top_multiplicand, top_multiplier;
+    Integer result;
+
+    for (top_multiplicand = DIGIT_NUMBER - 1;
+            num[top_multiplicand] == 0; top_multiplicand--)
+        ;
+
+    for (top_multiplier = DIGIT_NUMBER - 1;
+            integer2.num[top_multiplier] == 0; top_multiplier--)
+        ;
+
+    for (int multiplier_i = 0; multiplier_i <= top_multiplier + 1;
+            multiplier_i++) {
+        Integer tmp;
+
+        for (int multiplicand_i = 0; multiplicand_i <= top_multiplicand + 1;
+                multiplicand_i++) {
+            int mul = num[multiplicand_i]
+                    * integer2.num[multiplier_i] + carry;
+            tmp.num[multiplicand_i] = mul % 10;
+            carry = mul / 10;
+        }
+
+        for (int i = 0; i < multiplier_i; i++) {
+            tmp.multiply_by_ten();
+        }
+
+        result += tmp;
     }
 
     return result;
@@ -350,16 +385,16 @@ int Integer::get_int() {
 
 Integer Integer::multiply_by_ten() {
     Integer result;
-    int i;
 
-    if (this->num[DIGIT_NUMBER - 1] != 0) {
-        puts("overflow!!");
+    if (num[DIGIT_NUMBER - 1] != 0) {
+        cout << "overflow!!(multiply_by_ten)" << endl;
     }
 
-    for (i = 0; i < DIGIT_NUMBER - 1; i++) {
-        result.num[i + 1] = this->num[i];
+    for (int i = 0; i < DIGIT_NUMBER - 1; i++) {
+        result.num[i + 1] = num[i];
     }
     result.num[0] = 0;
+    *this = result;
 
     return 0;
 }
@@ -369,15 +404,16 @@ Integer Integer::divided_by_ten() {
     int i;
     int surplus;
 
-    if (this->num[DIGIT_NUMBER - 1] != 0) {
-        puts("underflow!!");
+    if (num[DIGIT_NUMBER - 1] != 0) {
+        cout << "underflow!!(multiply_by_ten)" << endl;
     }
-    surplus = (this->sign == 1) ? this->num[0] : this->num[0] * -1;
+    surplus = (sign == 1) ? num[0] : num[0] * -1;
 
     for (i = DIGIT_NUMBER - 1; i >= 0; i--) {
         result.num[i - 1] = this->num[i];
     }
     result.num[DIGIT_NUMBER - 1] = 0;
+    *this = result;
 
     return surplus;
 }
