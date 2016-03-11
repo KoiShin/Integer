@@ -21,9 +21,12 @@ public:
     void operator =(long number);
     void operator +=(Integer integer2);
     void operator -=(Integer integer2);
-    // void operator *=(Integer integer2);
+    void operator *=(Integer integer2);
     // void operator /=(Integer integer2);
     // void operator %=(Integer integer2);
+    void operator +=(long num2);
+    void operator -=(long num2);
+    void operator *=(long num2);
     bool operator >(Integer integer2);
     bool operator <(Integer integer2);
     bool operator >=(Integer integer2);
@@ -225,9 +228,29 @@ void Integer::operator +=(Integer integer2) {
     *this = result;
 }
 
+void Integer::operator +=(long num2) {
+    Integer integer2(num2);
+    *this += integer2;
+}
+
 void Integer::operator -=(Integer integer2) {
     Integer result = *this - integer2;
     *this = result;
+}
+
+void Integer::operator -=(long num2) {
+    Integer integer2(num2);
+    *this -= integer2;
+}
+
+void Integer::operator *=(Integer integer2) {
+    Integer result = *this * integer2;
+    *this = result;
+}
+
+void Integer::operator *=(long num2) {
+    Integer integer2(num2);
+    *this *= integer2;
 }
 
 void Integer::operator ++() {
