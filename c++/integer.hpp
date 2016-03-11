@@ -116,7 +116,7 @@ Integer Integer::operator +(Integer integer2) {
 }
 
 Integer Integer::operator +(long num2) {
-    Integer integer2(num2);
+    Integer integer2 = num2;
     return *this + integer2;
 }
 
@@ -165,7 +165,7 @@ Integer Integer::operator -(Integer integer2) {
 }
 
 Integer Integer::operator -(long num2) {
-    Integer integer2(num2);
+    Integer integer2 = num2;
     return *this - integer2;
 }
 
@@ -188,7 +188,7 @@ Integer Integer::operator *(Integer integer2) {
 }
 
 Integer Integer::operator *(long num2) {
-    Integer integer2(num2);
+    Integer integer2 = num2;
     return *this * integer2;
 }
 
@@ -270,7 +270,7 @@ Integer Integer::operator /(Integer integer2) {
 }
 
 Integer Integer::operator /(long num2) {
-    Integer integer2(num2);
+    Integer integer2 = num2;
     return *this / integer2;
 }
 
@@ -294,13 +294,11 @@ Integer Integer::operator %(Integer integer2) {
 }
 
 Integer Integer::operator %(long num2) {
-    Integer integer2(num2);
+    Integer integer2 = num2;
     return *this % integer2;
 }
 
 void Integer::operator =(long number) {
-    int i;
-
     clear_by_zero();
     set_sign(1);
     if (number < 0) {
@@ -308,7 +306,7 @@ void Integer::operator =(long number) {
         number *= -1;
     }
 
-    for (i = 0; i < DIGIT_NUMBER; i++) {
+    for (int i = 0; i < DIGIT_NUMBER; i++) {
         if (i >= DIGIT_NUMBER) {
             cout << "Some error occurred" << endl;
         }
@@ -323,7 +321,7 @@ void Integer::operator +=(Integer integer2) {
 }
 
 void Integer::operator +=(long num2) {
-    Integer integer2(num2);
+    Integer integer2 = num2;
     *this += integer2;
 }
 
@@ -333,7 +331,7 @@ void Integer::operator -=(Integer integer2) {
 }
 
 void Integer::operator -=(long num2) {
-    Integer integer2(num2);
+    Integer integer2 = num2;
     *this -= integer2;
 }
 
@@ -343,7 +341,7 @@ void Integer::operator *=(Integer integer2) {
 }
 
 void Integer::operator *=(long num2) {
-    Integer integer2(num2);
+    Integer integer2 = num2;
     *this *= integer2;
 }
 
@@ -353,7 +351,7 @@ void Integer::operator /=(Integer integer2) {
 }
 
 void Integer::operator /=(long num2) {
-    Integer integer2(num2);
+    Integer integer2 = num2;
     *this /= integer2;
 }
 
@@ -363,7 +361,7 @@ void Integer::operator %=(Integer integer2) {
 }
 
 void Integer::operator %=(long num2) {
-    Integer integer2(num2);
+    Integer integer2 = num2;
     *this %= integer2;
 }
 
@@ -381,7 +379,7 @@ bool Integer::operator >(Integer integer2) {
 }
 
 bool Integer::operator >(long num2) {
-    Integer integer2(num2);
+    Integer integer2 = num2;
     return *this > integer2;
 }
 
@@ -391,7 +389,7 @@ bool Integer::operator <(Integer integer2) {
 }
 
 bool Integer::operator <(long num2) {
-    Integer integer2(num2);
+    Integer integer2 = num2;
     return *this < integer2;
 }
 
@@ -401,7 +399,7 @@ bool Integer::operator >=(Integer integer2) {
 }
 
 bool Integer::operator >=(long num2) {
-    Integer integer2(num2);
+    Integer integer2 = num2;
     return *this >= integer2;
 }
 
@@ -411,7 +409,7 @@ bool Integer::operator <=(Integer integer2) {
 }
 
 bool Integer::operator <=(long num2) {
-    Integer integer2(num2);
+    Integer integer2 = num2;
     return *this <= integer2;
 }
 
@@ -421,7 +419,7 @@ bool Integer::operator ==(Integer integer2) {
 }
 
 bool Integer::operator ==(long num2) {
-    Integer integer2(num2);
+    Integer integer2 = num2;
     return *this == integer2;
 }
 
@@ -431,31 +429,28 @@ bool Integer::operator !=(Integer integer2) {
 }
 
 bool Integer::operator !=(long num2) {
-    Integer integer2(num2);
+    Integer integer2 = num2;
     return *this != integer2;
 }
 
 void Integer::set_sign(int sign) {
     if (sign != 1 && sign != -1) {
-        puts("invalid sign!!");
+        cout << "invalid sign!!(set_sign)" << endl;
     }
     this->sign = (sign == 1) ? 1 : -1;
 }
 
 void Integer::clear_by_zero() {
-    int i;
-    for (i = 0; i < DIGIT_NUMBER; i++) {
+    for (int i = 0; i < DIGIT_NUMBER; i++) {
         num[i] = 0;
     }
     set_sign(1);
 }
 
 void Integer::display_number() {
-    int i;
     cout << ((sign == 1) ? " +" : " -");
-    for (i = DIGIT_NUMBER - 1; i >= 0; i--) {
-        cout.width(2);
-        cout << num[i];
+    for (int i = DIGIT_NUMBER - 1; i >= 0; i--) {
+        printf("%2d", num[i]);
     }
     cout << endl;
 }
@@ -467,18 +462,16 @@ void Integer::display_number_zero_suppress() {
         if (num[i] != 0) break;
     }
     for (; i >= 0; i--) {
-        cout.width(2);
-        cout << num[i];
+        printf("%2d", num[i]);
     }
     cout << endl;
 }
 
 int Integer::compare_number(Integer integer2) {
-    int i;
     if (this->sign > integer2.sign) return  1;
     if (this->sign < integer2.sign) return -1;
 
-    for (i = DIGIT_NUMBER - 1; i >= 0; i--) {
+    for (int i = DIGIT_NUMBER - 1; i >= 0; i--) {
         if (this->num[i] > integer2.num[i]) return  1 * this->sign;
         if (this->num[i] < integer2.num[i]) return -1 * this->sign;
     }
@@ -500,15 +493,13 @@ Integer Integer::get_abs() {
 }
 
 bool Integer::is_zero() {
-    int i;
-    for (i = 0; i < DIGIT_NUMBER; i++) {
+    for (int i = 0; i < DIGIT_NUMBER; i++) {
         if (num[i] != 0) return false;
     }
     return true;
 }
 
 void Integer::set_random_number(int digit_number) {
-    int i;
     int sign;
 
     if (digit_number > DIGIT_NUMBER) {
@@ -517,7 +508,7 @@ void Integer::set_random_number(int digit_number) {
     }
 
     clear_by_zero();
-    for (i = 0; i < digit_number; i++) {
+    for (int i = 0; i < digit_number; i++) {
         num[i] = random() % 10;
     }
     sign = (random() % 2 == 0) ? 1 : -1;
@@ -525,10 +516,9 @@ void Integer::set_random_number(int digit_number) {
 }
 
 int Integer::get_int() {
-    int i;
     int number = 0;
 
-    for (i = 0; i < DIGIT_NUMBER; i++) {
+    for (int i = 0; i < DIGIT_NUMBER; i++) {
         number += num[i] * pow(10, i);
     }
     if (sign == -1) {
