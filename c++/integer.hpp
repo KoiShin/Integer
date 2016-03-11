@@ -17,7 +17,7 @@ public:
     Integer operator -(Integer integer2);
     Integer operator *(Integer integer2);
     Integer operator /(Integer integer2);
-    // Integer operator %(Integer integer2);
+    Integer operator %(Integer integer2);
     void operator =(long number);
     void operator +=(Integer integer2);
     void operator -=(Integer integer2);
@@ -60,7 +60,7 @@ private:
     void set_sign(int sign);
     int compare_number(Integer integer2);
     Integer multiple_positive_num(Integer integer2);
-    Integer divide_positive_num(Integer integer2);
+    Integer divmod(Integer integer2, bool mode);
 };
 
 Integer::Integer() {
@@ -207,31 +207,8 @@ Integer Integer::multiple_positive_num(Integer integer2) {
     return result;
 }
 
-Integer Integer::operator /(Integer integer2) {
-    Integer abs_dividend, abs_divisor, result;
-    int positive_dividend = (*this >= 0) ? 1 : 0;
-    int positive_divisor  = (integer2 >= 0) ? 1 : 0;
-
-    abs_dividend = get_abs();
-    abs_divisor = integer2.get_abs();
-
-    result = abs_dividend.divide_positive_num(abs_divisor);
-
-    if (positive_dividend && !positive_divisor) {
-        result.set_sign(-1);
-    } else if (!positive_dividend && positive_divisor) {
-        result.set_sign(-1);
-    }
-
-    if (result >= 0) {
-        result.set_sign(1);
-    }
-
-    return result;
-}
-
-Integer Integer::divide_positive_num(Integer integer2) {
-    Integer result;
+Integer Integer::divmod(Integer integer2, bool mode) {
+    Integer result, surplus;
     int cnt;
 
     if (integer2 == 0) return -1;
@@ -248,8 +225,47 @@ Integer Integer::divide_positive_num(Integer integer2) {
         }
         integer2.divided_by_ten();
     }
+    surplus = *this;
+
+    return (mode == true) ? result : surplus;
+}
+
+Integer Integer::operator /(Integer integer2) {
+    Integer abs_dividend, abs_divisor, result;
+    int positive_dividend = (*this >= 0) ? 1 : 0;
+    int positive_divisor  = (integer2 >= 0) ? 1 : 0;
+
+    abs_dividend = get_abs();
+    abs_divisor = integer2.get_abs();
+
+    result = abs_dividend.divmod(abs_divisor, true);
+
+    if (positive_dividend && !positive_divisor) {
+        result.set_sign(-1);
+    } else if (!positive_dividend && positive_divisor) {
+        result.set_sign(-1);
+    }
 
     return result;
+}
+
+Integer Integer::operator %(Integer integer2) {
+    Integer abs_dividend, abs_divisor, surplus;
+    int positive_dividend = (*this >= 0) ? 1 : 0;
+    int positive_divisor  = (integer2 >= 0) ? 1 : 0;
+
+    abs_dividend = get_abs();
+    abs_divisor = integer2.get_abs();
+
+    surplus = abs_dividend.divmod(abs_divisor, false);
+
+    if (!positive_dividend && positive_divisor) {
+        surplus.set_sign(-1);
+    } else if (!positive_dividend && !positive_divisor) {
+        surplus.set_sign(-1);
+    }
+
+    return surplus;
 }
 
 void Integer::operator =(long number) {
