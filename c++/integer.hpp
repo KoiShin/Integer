@@ -18,6 +18,11 @@ public:
     Integer operator *(Integer integer2);
     Integer operator /(Integer integer2);
     Integer operator %(Integer integer2);
+    Integer operator +(long num2);
+    Integer operator -(long num2);
+    Integer operator *(long num2);
+    Integer operator /(long num2);
+    Integer operator %(long num2);
     void operator =(long number);
     void operator +=(Integer integer2);
     void operator -=(Integer integer2);
@@ -110,6 +115,11 @@ Integer Integer::operator +(Integer integer2) {
     return result;
 }
 
+Integer Integer::operator +(long num2) {
+    Integer integer2(num2);
+    return *this + integer2;
+}
+
 Integer Integer::operator -(Integer integer2) {
     Integer num_, num2_, result;
     int borrow = 0;
@@ -154,6 +164,11 @@ Integer Integer::operator -(Integer integer2) {
     return result;
 }
 
+Integer Integer::operator -(long num2) {
+    Integer integer2(num2);
+    return *this - integer2;
+}
+
 Integer Integer::operator *(Integer integer2) {
     Integer abs_multiplicand, abs_multiplier, result;
     int positive_multiplicand = (*this >= 0) ? 1 : 0;
@@ -170,6 +185,11 @@ Integer Integer::operator *(Integer integer2) {
         result.set_sign(-1);
     }
     return result;
+}
+
+Integer Integer::operator *(long num2) {
+    Integer integer2(num2);
+    return *this * integer2;
 }
 
 Integer Integer::multiple_positive_num(Integer integer2) {
@@ -249,6 +269,11 @@ Integer Integer::operator /(Integer integer2) {
     return result;
 }
 
+Integer Integer::operator /(long num2) {
+    Integer integer2(num2);
+    return *this / integer2;
+}
+
 Integer Integer::operator %(Integer integer2) {
     Integer abs_dividend, abs_divisor, surplus;
     int positive_dividend = (*this >= 0) ? 1 : 0;
@@ -266,6 +291,11 @@ Integer Integer::operator %(Integer integer2) {
     }
 
     return surplus;
+}
+
+Integer Integer::operator %(long num2) {
+    Integer integer2(num2);
+    return *this % integer2;
 }
 
 void Integer::operator =(long number) {
