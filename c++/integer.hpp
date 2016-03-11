@@ -16,7 +16,7 @@ public:
     Integer operator +(Integer integer2);
     Integer operator -(Integer integer2);
     Integer operator *(Integer integer2);
-    // Integer operator /(Integer integer2);
+    Integer operator /(Integer integer2);
     // Integer operator %(Integer integer2);
     void operator =(long number);
     void operator +=(Integer integer2);
@@ -58,6 +58,7 @@ private:
     void set_sign(int sign);
     int compare_number(Integer integer2);
     Integer multiple_positive_num(Integer integer2);
+    Integer divide_positive_num(Integer integer2);
 };
 
 Integer::Integer() {
@@ -204,6 +205,51 @@ Integer Integer::multiple_positive_num(Integer integer2) {
     return result;
 }
 
+Integer Integer::operator /(Integer integer2) {
+    Integer abs_dividend, abs_divisor, result;
+    int positive_dividend = (*this >= 0) ? 1 : 0;
+    int positive_divisor  = (integer2 >= 0) ? 1 : 0;
+
+    abs_dividend = get_abs();
+    abs_divisor = integer2.get_abs();
+
+    result = abs_dividend.divide_positive_num(abs_divisor);
+
+    if (positive_dividend && !positive_divisor) {
+        result.set_sign(-1);
+    } else if (!positive_dividend && positive_divisor) {
+        result.set_sign(-1);
+    }
+
+    if (result >= 0) {
+        result.set_sign(1);
+    }
+
+    return result;
+}
+
+Integer Integer::divide_positive_num(Integer integer2) {
+    Integer result;
+    int cnt;
+
+    if (integer2 == 0) return -1;
+
+    for (cnt = 0; *this >= integer2; cnt++) {
+        integer2.multiply_by_ten();
+    }
+
+    for (int i = 0; i <= cnt; i++) {
+        result.multiply_by_ten();
+        while (*this >= integer2) {
+            ++result;
+            *this -= integer2;
+        }
+        integer2.divided_by_ten();
+    }
+
+    return result;
+}
+
 void Integer::operator =(long number) {
     int i;
 
@@ -254,13 +300,11 @@ void Integer::operator *=(long num2) {
 }
 
 void Integer::operator ++() {
-    Integer one(1);
-    *this += one;
+    *this += 1;
 }
 
 void Integer::operator --() {
-    Integer one(1);
-    *this -= one;
+    *this -= 1;
 }
 
 bool Integer::operator >(Integer integer2) {
@@ -443,15 +487,14 @@ Integer Integer::multiply_by_ten() {
 
 Integer Integer::divided_by_ten() {
     Integer result;
-    int i;
     int surplus;
 
     if (num[DIGIT_NUMBER - 1] != 0) {
-        cout << "underflow!!(multiply_by_ten)" << endl;
+        cout << "underflow!!(divided_by_ten)" << endl;
     }
     surplus = (sign == 1) ? num[0] : num[0] * -1;
 
-    for (i = DIGIT_NUMBER - 1; i >= 0; i--) {
+    for (int i = DIGIT_NUMBER - 1; i >= 0; i--) {
         result.num[i - 1] = this->num[i];
     }
     result.num[DIGIT_NUMBER - 1] = 0;
