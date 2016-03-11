@@ -54,6 +54,7 @@ private:
     int sign;
     void set_sign(int sign);
     int compare_number(Integer integer2);
+    Integer multiple_positive_num(Integer integer2);
 };
 
 Integer::Integer() {
@@ -148,6 +149,24 @@ Integer Integer::operator -(Integer integer2) {
 }
 
 Integer Integer::operator *(Integer integer2) {
+    Integer abs_multiplicand, abs_multiplier, result;
+    int positive_multiplicand = (*this >= 0) ? 1 : 0;
+    int positive_multiplier   = (integer2 >= 0) ? 1 : 0;
+
+    abs_multiplicand = get_abs();
+    abs_multiplier = integer2.get_abs();
+
+    result = abs_multiplicand.multiple_positive_num(abs_multiplier);
+
+    if (positive_multiplicand && !positive_multiplier) {
+        result.set_sign(-1);
+    } else if (!positive_multiplicand && positive_multiplier) {
+        result.set_sign(-1);
+    }
+    return result;
+}
+
+Integer Integer::multiple_positive_num(Integer integer2) {
     int carry = 0;
     int top_multiplicand, top_multiplier;
     Integer result;
