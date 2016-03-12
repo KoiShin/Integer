@@ -492,9 +492,7 @@ int Integer::compare_number(Integer integer2) {
 }
 
 void Integer::swap_number(Integer *integer2) {
-    Integer tmp = *this;
-    *this = *integer2;
-    *integer2 = tmp;
+    swap(*this, *integer2);
 }
 
 Integer Integer::get_abs() {
