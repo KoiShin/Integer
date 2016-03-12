@@ -55,7 +55,6 @@ public:
     void clear_by_zero();
     Integer get_abs();
     void set_random_number(int digit_number);
-    void swap_number(Integer *integer2);
     bool is_zero();
     int get_int();
     Integer multiply_by_ten();
@@ -147,7 +146,7 @@ Integer Integer::operator -(Integer integer2) {
     }
 
     if (num_ < num2_) {
-        num_.swap_number(&num2_);
+        swap(num_, num2_);
         result.set_sign(-1);
     }
 
@@ -489,10 +488,6 @@ int Integer::compare_number(Integer integer2) {
         if (num[i] < integer2.num[i]) return -1 * sign;
     }
     return 0;
-}
-
-void Integer::swap_number(Integer *integer2) {
-    swap(*this, *integer2);
 }
 
 Integer Integer::get_abs() {
