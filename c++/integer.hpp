@@ -42,6 +42,8 @@ public:
     bool operator !=(Integer integer2);
     void operator ++();
     void operator --();
+    void operator ++(int);
+    void operator --(int);
     bool operator >(long num2);
     bool operator <(long num2);
     bool operator >=(long num2);
@@ -243,7 +245,7 @@ Integer Integer::divmod(Integer integer2, bool mode) {
     for (int i = 0; i <= cnt; i++) {
         result.multiply_by_ten();
         while (*this >= integer2) {
-            ++result;
+            result++;
             *this -= integer2;
         }
         integer2.divided_by_ten();
@@ -373,6 +375,14 @@ void Integer::operator ++() {
 }
 
 void Integer::operator --() {
+    *this -= 1;
+}
+
+void Integer::operator ++(int) {
+    *this += 1;
+}
+
+void Integer::operator --(int) {
     *this -= 1;
 }
 
@@ -578,7 +588,7 @@ Integer Integer::power(Integer exponent) {
     while (1) {
         if (i >= exponent) break;
         result *= *this;
-        ++i;
+        i++;
     }
 
     return result;
@@ -616,7 +626,7 @@ Integer Integer::factorial() {
 
     while (integer != 0) {
         result *= integer;
-        --integer;
+        integer--;
     }
     return result;
 }
