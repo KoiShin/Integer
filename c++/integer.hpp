@@ -75,7 +75,6 @@ private:
 
 Integer::Integer() {
     clear_by_zero();
-    set_sign(1);
 }
 
 Integer::Integer(long number) {
@@ -453,8 +452,8 @@ void Integer::set_sign(int sign) {
 }
 
 void Integer::clear_by_zero() {
-    for (int i = 0; i < DIGIT_NUMBER; i++) {
-        num[i] = 0;
+    for (int &n : num) {
+        n = 0;
     }
     set_sign(1);
 }
@@ -497,8 +496,8 @@ Integer Integer::get_abs() {
 }
 
 bool Integer::is_zero() {
-    for (int i = 0; i < DIGIT_NUMBER; i++) {
-        if (num[i] != 0) return false;
+    for (int n : num) {
+        if (n != 0) return false;
     }
     return true;
 }
@@ -528,6 +527,7 @@ int Integer::get_int() {
     if (sign == -1) {
         number *= -1;
     }
+
     return number;
 }
 
@@ -573,7 +573,6 @@ Integer Integer::power(Integer exponent) {
         result = 0;
         return result;
     }
-
     if (*this == 1 || exponent == 0) {
         return result;
     }
