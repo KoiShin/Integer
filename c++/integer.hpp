@@ -61,6 +61,7 @@ public:
     Integer power(Integer exponent);
     Integer power(long exponent);
     bool is_prime();
+    Integer factorial();
 
 private:
     int num[DIGIT_NUMBER];
@@ -610,6 +611,17 @@ bool Integer::is_prime() {
     }
 
     return true;
+}
+
+Integer Integer::factorial() {
+    Integer integer = *this;
+    Integer result = 1;
+
+    while (integer != 0) {
+        result *= integer;
+        --integer;
+    }
+    return result;
 }
 
 #endif
