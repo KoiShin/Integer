@@ -58,6 +58,7 @@ public:
     int get_int();
     Integer multiply_by_ten();
     Integer divided_by_ten();
+    Integer power(Integer exponent);
 
 private:
     int num[DIGIT_NUMBER];
@@ -559,6 +560,28 @@ Integer Integer::divided_by_ten() {
     *this = result;
 
     return surplus;
+}
+
+Integer Integer::power(Integer exponent) {
+    Integer result = 1;
+    Integer i;
+
+    if (*this == 0) {
+        result = 0;
+        return result;
+    }
+
+    if (*this == 1 || exponent == 0) {
+        return result;
+    }
+
+    while (1) {
+        if (i >= exponent) break;
+        result *= *this;
+        ++i;
+    }
+
+    return result;
 }
 
 #endif
