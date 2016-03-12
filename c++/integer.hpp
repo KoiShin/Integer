@@ -83,7 +83,6 @@ Integer::Integer(long number) {
 
 Integer Integer::operator +(Integer integer2) {
     int carry = 0;
-    int i;
     Integer result;
 
     if (*this >= 0 && integer2 < 0) {
@@ -106,7 +105,7 @@ Integer Integer::operator +(Integer integer2) {
         return result;
     }
 
-    for (i = 0; i < DIGIT_NUMBER; i++) {
+    for (int i = 0; i < DIGIT_NUMBER; i++) {
         int tmp = num[i] + integer2.num[i] + carry;
         result.num[i] = tmp % 10;
         carry = tmp / 10;
@@ -304,7 +303,7 @@ Integer Integer::operator %(long num2) {
 
 void Integer::operator =(long number) {
     clear_by_zero();
-    set_sign(1);
+
     if (number < 0) {
         set_sign(-1);
         number *= -1;
@@ -472,26 +471,24 @@ void Integer::display_number_zero_suppress() {
 }
 
 int Integer::compare_number(Integer integer2) {
-    if (this->sign > integer2.sign) return  1;
-    if (this->sign < integer2.sign) return -1;
+    if (sign > integer2.sign) return  1;
+    if (sign < integer2.sign) return -1;
 
     for (int i = DIGIT_NUMBER - 1; i >= 0; i--) {
-        if (this->num[i] > integer2.num[i]) return  1 * this->sign;
-        if (this->num[i] < integer2.num[i]) return -1 * this->sign;
+        if (num[i] > integer2.num[i]) return  1 * sign;
+        if (num[i] < integer2.num[i]) return -1 * sign;
     }
     return 0;
 }
 
 void Integer::swap_number(Integer *integer2) {
-    Integer tmp;
-    tmp = *this;
+    Integer tmp = *this;
     *this = *integer2;
     *integer2 = tmp;
 }
 
 Integer Integer::get_abs() {
-    Integer abs_num;
-    abs_num = *this;
+    Integer abs_num = *this;
     abs_num.set_sign(1);
     return abs_num;
 }
@@ -557,7 +554,7 @@ Integer Integer::divided_by_ten() {
     surplus = (sign == 1) ? num[0] : num[0] * -1;
 
     for (int i = DIGIT_NUMBER - 1; i >= 0; i--) {
-        result.num[i - 1] = this->num[i];
+        result.num[i - 1] = num[i];
     }
     result.num[DIGIT_NUMBER - 1] = 0;
     *this = result;
