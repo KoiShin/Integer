@@ -60,6 +60,7 @@ public:
     Integer divided_by_ten();
     Integer power(Integer exponent);
     Integer power(long exponent);
+    bool is_prime();
 
 private:
     int num[DIGIT_NUMBER];
@@ -588,6 +589,27 @@ Integer Integer::power(Integer exponent) {
 Integer Integer::power(long exponent) {
     Integer integer2 = exponent;
     return power(integer2);
+}
+
+bool Integer::is_prime() {
+    Integer integer = *this;
+    Integer division = 3;
+    Integer remain;
+    Integer max = integer / 2;
+
+    if (integer.num[0] % 2 == 0) return false;
+    if (integer == 1) return false;
+
+    while (1) {
+        if (division >= max) break;
+
+        remain = integer % division;
+        if (remain == 0) return false;
+
+        division += 2;
+    }
+
+    return true;
 }
 
 #endif
