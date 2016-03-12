@@ -59,6 +59,7 @@ public:
     Integer multiply_by_ten();
     Integer divided_by_ten();
     Integer power(Integer exponent);
+    Integer power(long exponent);
 
 private:
     int num[DIGIT_NUMBER];
@@ -582,6 +583,11 @@ Integer Integer::power(Integer exponent) {
     }
 
     return result;
+}
+
+Integer Integer::power(long exponent) {
+    Integer integer2 = exponent;
+    return power(integer2);
 }
 
 #endif
