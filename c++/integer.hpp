@@ -16,61 +16,61 @@ public:
     Integer();
     Integer(long number);
     Integer operator +(Integer integer2);
-    Integer operator -(Integer integer2);
-    Integer operator *(Integer integer2);
-    Integer operator /(Integer integer2);
-    Integer operator %(Integer integer2);
     Integer operator +(long num2);
+    Integer operator -(Integer integer2);
     Integer operator -(long num2);
+    Integer operator *(Integer integer2);
     Integer operator *(long num2);
+    Integer operator /(Integer integer2);
     Integer operator /(long num2);
+    Integer operator %(Integer integer2);
     Integer operator %(long num2);
     void operator =(long number);
     void operator +=(Integer integer2);
-    void operator -=(Integer integer2);
-    void operator *=(Integer integer2);
-    void operator /=(Integer integer2);
-    void operator %=(Integer integer2);
     void operator +=(long num2);
+    void operator -=(Integer integer2);
     void operator -=(long num2);
+    void operator *=(Integer integer2);
     void operator *=(long num2);
+    void operator /=(Integer integer2);
     void operator /=(long num2);
+    void operator %=(Integer integer2);
     void operator %=(long num2);
     bool operator >(Integer integer2);
-    bool operator <(Integer integer2);
-    bool operator >=(Integer integer2);
-    bool operator <=(Integer integer2);
-    bool operator ==(Integer integer2);
-    bool operator !=(Integer integer2);
-    void operator ++();
-    void operator --();
-    void operator ++(int);
-    void operator --(int);
     bool operator >(long num2);
+    bool operator <(Integer integer2);
     bool operator <(long num2);
+    bool operator >=(Integer integer2);
     bool operator >=(long num2);
+    bool operator <=(Integer integer2);
     bool operator <=(long num2);
+    bool operator ==(Integer integer2);
     bool operator ==(long num2);
+    bool operator !=(Integer integer2);
     bool operator !=(long num2);
+    void operator ++();
+    void operator ++(int);
+    void operator --();
+    void operator --(int);
     void display_number();
     void display_number_zero_suppress();
-    void clear_by_zero();
-    Integer get_abs();
-    void set_random_number(int digit_number);
-    bool is_zero();
     int get_int();
+    Integer get_abs();
+    bool is_zero();
+    bool is_prime();
+    void clear_by_zero();
+    void set_random_number(int digit_number);
     Integer multiply_by_ten();
     Integer divided_by_ten();
     Integer power(Integer exponent);
     Integer power(long exponent);
-    bool is_prime();
     Integer factorial();
 
 private:
     int num[DIGIT_NUMBER];
     int sign;
-    void set_sign(int sign);
     int compare_number(Integer integer2);
+    void set_sign(int sign);
     Integer multiple_positive_num(Integer integer2);
     Integer divmod(Integer integer2, bool mode);
 };
@@ -107,13 +107,13 @@ Integer Integer::operator +(Integer integer2) {
     }
 
     if (*this < 0 && integer2 >= 0) {
-        Integer abs_num = get_abs();
+        Integer abs_num = this->get_abs();
         result = integer2 - abs_num;
         return result;
     }
 
     if (*this < 0 && integer2 < 0) {
-        Integer abs_num = get_abs();
+        Integer abs_num = this->get_abs();
         Integer abs_num2 = integer2.get_abs();
         result = abs_num + abs_num2;
         result.set_sign(-1);
@@ -187,29 +187,6 @@ Integer Integer::operator -(long num2) {
     return *this - integer2;
 }
 
-Integer Integer::operator *(Integer integer2) {
-    Integer abs_multiplicand, abs_multiplier, result;
-    int positive_multiplicand = (*this >= 0) ? 1 : 0;
-    int positive_multiplier   = (integer2 >= 0) ? 1 : 0;
-
-    abs_multiplicand = get_abs();
-    abs_multiplier = integer2.get_abs();
-
-    result = abs_multiplicand.multiple_positive_num(abs_multiplier);
-
-    if (positive_multiplicand && !positive_multiplier) {
-        result.set_sign(-1);
-    } else if (!positive_multiplicand && positive_multiplier) {
-        result.set_sign(-1);
-    }
-    return result;
-}
-
-Integer Integer::operator *(long num2) {
-    Integer integer2 = num2;
-    return *this * integer2;
-}
-
 Integer Integer::multiple_positive_num(Integer integer2) {
     int carry = 0;
     int top_multiplicand, top_multiplier;
@@ -245,6 +222,29 @@ Integer Integer::multiple_positive_num(Integer integer2) {
     return result;
 }
 
+Integer Integer::operator *(Integer integer2) {
+    Integer abs_multiplicand, abs_multiplier, result;
+    int positive_multiplicand = (*this >= 0) ? 1 : 0;
+    int positive_multiplier   = (integer2 >= 0) ? 1 : 0;
+
+    abs_multiplicand = this->get_abs();
+    abs_multiplier = integer2.get_abs();
+
+    result = abs_multiplicand.multiple_positive_num(abs_multiplier);
+
+    if (positive_multiplicand && !positive_multiplier) {
+        result.set_sign(-1);
+    } else if (!positive_multiplicand && positive_multiplier) {
+        result.set_sign(-1);
+    }
+    return result;
+}
+
+Integer Integer::operator *(long num2) {
+    Integer integer2 = num2;
+    return *this * integer2;
+}
+
 Integer Integer::divmod(Integer integer2, bool mode) {
     Integer result, surplus;
     int cnt;
@@ -273,7 +273,7 @@ Integer Integer::operator /(Integer integer2) {
     int positive_dividend = (*this >= 0) ? 1 : 0;
     int positive_divisor  = (integer2 >= 0) ? 1 : 0;
 
-    abs_dividend = get_abs();
+    abs_dividend = this->get_abs();
     abs_divisor = integer2.get_abs();
 
     result = abs_dividend.divmod(abs_divisor, true);
@@ -297,7 +297,7 @@ Integer Integer::operator %(Integer integer2) {
     int positive_dividend = (*this >= 0) ? 1 : 0;
     int positive_divisor  = (integer2 >= 0) ? 1 : 0;
 
-    abs_dividend = get_abs();
+    abs_dividend = this->get_abs();
     abs_divisor = integer2.get_abs();
 
     surplus = abs_dividend.divmod(abs_divisor, false);
@@ -399,6 +399,17 @@ void Integer::operator --(int) {
     *this -= 1;
 }
 
+int Integer::compare_number(Integer integer2) {
+    if (sign > integer2.sign) return  1;
+    if (sign < integer2.sign) return -1;
+
+    for (int i = DIGIT_NUMBER - 1; i >= 0; i--) {
+        if (num[i] > integer2.num[i]) return  1 * sign;
+        if (num[i] < integer2.num[i]) return -1 * sign;
+    }
+    return 0;
+}
+
 bool Integer::operator >(Integer integer2) {
     if (compare_number(integer2) == 1) return true;
     else return false;
@@ -459,20 +470,6 @@ bool Integer::operator !=(long num2) {
     return *this != integer2;
 }
 
-void Integer::set_sign(int sign) {
-    if (sign != 1 && sign != -1) {
-        cout << "invalid sign!!(set_sign)" << endl;
-    }
-    this->sign = (sign == 1) ? 1 : -1;
-}
-
-void Integer::clear_by_zero() {
-    for (int &n : num) {
-        n = 0;
-    }
-    set_sign(1);
-}
-
 void Integer::display_number() {
     cout << ((sign == 1) ? " +" : " -");
     for (int i = DIGIT_NUMBER - 1; i >= 0; i--) {
@@ -493,15 +490,24 @@ void Integer::display_number_zero_suppress() {
     cout << endl;
 }
 
-int Integer::compare_number(Integer integer2) {
-    if (sign > integer2.sign) return  1;
-    if (sign < integer2.sign) return -1;
-
-    for (int i = DIGIT_NUMBER - 1; i >= 0; i--) {
-        if (num[i] > integer2.num[i]) return  1 * sign;
-        if (num[i] < integer2.num[i]) return -1 * sign;
+void Integer::set_sign(int sign) {
+    if (sign != 1 && sign != -1) {
+        cout << "invalid sign!!(set_sign)" << endl;
     }
-    return 0;
+    this->sign = (sign == 1) ? 1 : -1;
+}
+
+int Integer::get_int() {
+    int number = 0;
+
+    for (int i = 0; i < DIGIT_NUMBER; i++) {
+        number += num[i] * pow(10, i);
+    }
+    if (sign == -1) {
+        number *= -1;
+    }
+
+    return number;
 }
 
 Integer Integer::get_abs() {
@@ -515,6 +521,34 @@ bool Integer::is_zero() {
         if (n != 0) return false;
     }
     return true;
+}
+
+bool Integer::is_prime() {
+    Integer integer = *this;
+    Integer division = 3;
+    Integer remain;
+    Integer max = integer / 2;
+
+    if (integer.num[0] % 2 == 0) return false;
+    if (integer == 1) return false;
+
+    while (1) {
+        if (division >= max) break;
+
+        remain = integer % division;
+        if (remain == 0) return false;
+
+        division += 2;
+    }
+
+    return true;
+}
+
+void Integer::clear_by_zero() {
+    for (int &n : num) {
+        n = 0;
+    }
+    set_sign(1);
 }
 
 void Integer::set_random_number(int digit_number) {
@@ -531,19 +565,6 @@ void Integer::set_random_number(int digit_number) {
     }
     sign = (random() % 2 == 0) ? 1 : -1;
     set_sign(sign);
-}
-
-int Integer::get_int() {
-    int number = 0;
-
-    for (int i = 0; i < DIGIT_NUMBER; i++) {
-        number += num[i] * pow(10, i);
-    }
-    if (sign == -1) {
-        number *= -1;
-    }
-
-    return number;
 }
 
 Integer Integer::multiply_by_ten() {
@@ -604,27 +625,6 @@ Integer Integer::power(Integer exponent) {
 Integer Integer::power(long exponent) {
     Integer integer2 = exponent;
     return power(integer2);
-}
-
-bool Integer::is_prime() {
-    Integer integer = *this;
-    Integer division = 3;
-    Integer remain;
-    Integer max = integer / 2;
-
-    if (integer.num[0] % 2 == 0) return false;
-    if (integer == 1) return false;
-
-    while (1) {
-        if (division >= max) break;
-
-        remain = integer % division;
-        if (remain == 0) return false;
-
-        division += 2;
-    }
-
-    return true;
 }
 
 Integer Integer::factorial() {
