@@ -10,6 +10,8 @@ using namespace std;
 // TODO:例外処理
 
 class Integer {
+friend ostream &operator <<(ostream &out, Integer &integer);
+
 public:
     Integer();
     Integer(long number);
@@ -72,6 +74,19 @@ private:
     Integer multiple_positive_num(Integer integer2);
     Integer divmod(Integer integer2, bool mode);
 };
+
+ostream &operator <<(ostream &out, Integer &integer) {
+    int i;
+    out << ((integer.sign == 1) ? " +" : " -");
+    for (i = DIGIT_NUMBER - 1; i >= 0; i--) {
+        if (integer.num[i] != 0) break;
+    }
+    for (; i >= 0; i--) {
+        printf("%2d", integer.num[i]);
+    }
+
+    return out;
+}
 
 Integer::Integer() {
     clear_by_zero();
