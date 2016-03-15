@@ -60,8 +60,8 @@ public:
     bool is_prime();
     void clear_by_zero();
     void set_random_number(int digit_number);
-    Integer multiply_by_ten();
-    Integer divided_by_ten();
+    int multiply_by_ten();
+    int divided_by_ten();
     Integer power(Integer exponent);
     Integer power(long exponent);
     Integer factorial();
@@ -72,7 +72,7 @@ private:
     int compare_number(Integer integer2);
     void set_sign(int sign);
     Integer multiple_positive_num(Integer integer2);
-    Integer divmod(Integer integer2, bool mode);
+    Integer divmod(Integer integer2, bool is_mode_divide);
 };
 
 ostream &operator <<(ostream &out, Integer &integer) {
@@ -121,9 +121,9 @@ Integer Integer::operator +(Integer integer2) {
     }
 
     for (int i = 0; i < DIGIT_NUMBER; i++) {
-        int tmp = num[i] + integer2.num[i] + carry;
-        result.num[i] = tmp % 10;
-        carry = tmp / 10;
+        int sum = num[i] + integer2.num[i] + carry;
+        result.num[i] = sum % 10;
+        carry = sum / 10;
     }
 
     if (carry != 0) {
@@ -139,12 +139,10 @@ Integer Integer::operator +(long num2) {
 }
 
 Integer Integer::operator -(Integer integer2) {
-    Integer num_, num2_, result;
+    Integer num_ = *this;
+    Integer num2_ = integer2;
+    Integer result;
     int borrow = 0;
-    int minuend;
-
-    num_ = *this;
-    num2_ = integer2;
 
     if (num2_ < 0) {
         Integer abs_num = num2_.get_abs();
@@ -165,7 +163,7 @@ Integer Integer::operator -(Integer integer2) {
     }
 
     for (int i = 0; i < DIGIT_NUMBER; i++) {
-        minuend = num_.num[i] - borrow;
+        int minuend = num_.num[i] - borrow;
         if (minuend >= num2_.num[i]) {
             result.num[i] = minuend - num2_.num[i];
             borrow = 0;
@@ -223,14 +221,11 @@ Integer Integer::multiple_positive_num(Integer integer2) {
 }
 
 Integer Integer::operator *(Integer integer2) {
-    Integer abs_multiplicand, abs_multiplier, result;
+    Integer abs_multiplicand = this->get_abs();
+    Integer abs_multiplier = integer2.get_abs();
+    Integer result = abs_multiplicand.multiple_positive_num(abs_multiplier);;
     int positive_multiplicand = (*this >= 0) ? 1 : 0;
     int positive_multiplier   = (integer2 >= 0) ? 1 : 0;
-
-    abs_multiplicand = this->get_abs();
-    abs_multiplier = integer2.get_abs();
-
-    result = abs_multiplicand.multiple_positive_num(abs_multiplier);
 
     if (positive_multiplicand && !positive_multiplier) {
         result.set_sign(-1);
@@ -245,7 +240,7 @@ Integer Integer::operator *(long num2) {
     return *this * integer2;
 }
 
-Integer Integer::divmod(Integer integer2, bool mode) {
+Integer Integer::divmod(Integer integer2, bool is_mode_divide) {
     Integer result, surplus;
     int cnt;
 
@@ -265,18 +260,15 @@ Integer Integer::divmod(Integer integer2, bool mode) {
     }
     surplus = *this;
 
-    return (mode == true) ? result : surplus;
+    return (is_mode_divide == true) ? result : surplus;
 }
 
 Integer Integer::operator /(Integer integer2) {
-    Integer abs_dividend, abs_divisor, result;
+    Integer abs_dividend = this->get_abs();
+    Integer abs_divisor = integer2.get_abs();
+    Integer result = abs_dividend.divmod(abs_divisor, true);
     int positive_dividend = (*this >= 0) ? 1 : 0;
     int positive_divisor  = (integer2 >= 0) ? 1 : 0;
-
-    abs_dividend = this->get_abs();
-    abs_divisor = integer2.get_abs();
-
-    result = abs_dividend.divmod(abs_divisor, true);
 
     if (positive_dividend && !positive_divisor) {
         result.set_sign(-1);
@@ -293,14 +285,11 @@ Integer Integer::operator /(long num2) {
 }
 
 Integer Integer::operator %(Integer integer2) {
-    Integer abs_dividend, abs_divisor, surplus;
+    Integer abs_dividend = this->get_abs();
+    Integer abs_divisor = integer2.get_abs();
+    Integer surplus = abs_dividend.divmod(abs_divisor, false);
     int positive_dividend = (*this >= 0) ? 1 : 0;
     int positive_divisor  = (integer2 >= 0) ? 1 : 0;
-
-    abs_dividend = this->get_abs();
-    abs_divisor = integer2.get_abs();
-
-    surplus = abs_dividend.divmod(abs_divisor, false);
 
     if (!positive_dividend && positive_divisor) {
         surplus.set_sign(-1);
@@ -326,7 +315,7 @@ void Integer::operator =(long number) {
 
     for (int i = 0; i < DIGIT_NUMBER; i++) {
         if (i >= DIGIT_NUMBER) {
-            cout << "Some error occurred" << endl;
+            cout << "overflow!!" << endl;
         }
         num[i] = number % 10;
         number /= 10;
@@ -400,12 +389,12 @@ void Integer::operator --(int) {
 }
 
 int Integer::compare_number(Integer integer2) {
-    if (sign > integer2.sign) return  1;
-    if (sign < integer2.sign) return -1;
+    if (this->sign > integer2.sign) return  1;
+    if (this->sign < integer2.sign) return -1;
 
     for (int i = DIGIT_NUMBER - 1; i >= 0; i--) {
-        if (num[i] > integer2.num[i]) return  1 * sign;
-        if (num[i] < integer2.num[i]) return -1 * sign;
+        if (this->num[i] > integer2.num[i]) return  1 * this->sign;
+        if (this->num[i] < integer2.num[i]) return -1 * this->sign;
     }
     return 0;
 }
@@ -567,11 +556,12 @@ void Integer::set_random_number(int digit_number) {
     set_sign(sign);
 }
 
-Integer Integer::multiply_by_ten() {
+int Integer::multiply_by_ten() {
     Integer result;
 
     if (num[DIGIT_NUMBER - 1] != 0) {
         cout << "overflow!!(multiply_by_ten)" << endl;
+        return -1;
     }
 
     for (int i = 0; i < DIGIT_NUMBER - 1; i++) {
@@ -583,14 +573,14 @@ Integer Integer::multiply_by_ten() {
     return 0;
 }
 
-Integer Integer::divided_by_ten() {
+int Integer::divided_by_ten() {
     Integer result;
-    int surplus;
 
     if (num[DIGIT_NUMBER - 1] != 0) {
         cout << "underflow!!(divided_by_ten)" << endl;
+        return -1;
     }
-    surplus = (sign == 1) ? num[0] : num[0] * -1;
+    int surplus = (sign == 1) ? num[0] : num[0] * -1;
 
     for (int i = DIGIT_NUMBER - 1; i >= 0; i--) {
         result.num[i - 1] = num[i];
@@ -598,7 +588,7 @@ Integer Integer::divided_by_ten() {
     result.num[DIGIT_NUMBER - 1] = 0;
     *this = result;
 
-    return surplus;
+    return 0;
 }
 
 Integer Integer::power(Integer exponent) {
