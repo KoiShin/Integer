@@ -580,7 +580,6 @@ int Integer::divided_by_ten() {
         cout << "underflow!!(divided_by_ten)" << endl;
         return -1;
     }
-    int surplus = (sign == 1) ? num[0] : num[0] * -1;
 
     for (int i = DIGIT_NUMBER - 1; i >= 0; i--) {
         result.num[i - 1] = num[i];
